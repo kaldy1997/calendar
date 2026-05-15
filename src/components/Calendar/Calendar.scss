@@ -1,0 +1,54 @@
+@use '../../styles/variables' as *;
+
+.calendar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  // ---- Navigation Header ----
+  &__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-xl;
+    padding: $spacing-sm 0;
+    margin-top: $spacing-sm;
+  }
+
+  &__month-year {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    transition: all $transition-fast;
+    user-select: none;
+    text-transform: capitalize;
+    color: $color-text-primary;
+
+    &:hover {
+      color: $color-accent-light;
+      transform: translateY(-1px);
+    }
+  }
+
+  // ---- View Container ----
+  &__view-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__placeholder {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-text-muted;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: $radius-lg;
+    border: 1px dashed $color-border;
+    margin: $spacing-xl 0;
+  }
+}

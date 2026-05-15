@@ -1,0 +1,187 @@
+@use '../../styles/variables' as *;
+
+.week-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  animation: fade-in 0.3s ease-out;
+  margin: 0 (-$spacing-xl); // Compensate app content padding
+
+  &__header {
+    display: flex;
+    border-bottom: 1px solid $color-border;
+    background: rgba($color-bg-secondary, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+  }
+
+  &__corner {
+    width: 45px;
+    flex-shrink: 0;
+    border-right: 1px solid $color-border;
+  }
+
+  &__days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    flex: 1;
+  }
+
+  &__day-col-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $spacing-xs 0;
+    cursor: pointer;
+    transition: background $transition-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &--today {
+      .week-view__day-number {
+        background: $color-today;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba($color-today, 0.4);
+      }
+    }
+  }
+
+  &__day-name {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  &__day-number {
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    &--weekend {
+      color: #4facfe;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    
+    // Custom scrollbar
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba($color-border, 0.5);
+      border-radius: 2px;
+    }
+  }
+
+  &__grid {
+    display: flex;
+    min-height: 1440px; // 24 hours * 60px
+    position: relative;
+  }
+
+  &__hours {
+    width: 45px;
+    flex-shrink: 0;
+    border-right: 1px solid $color-border;
+    background: rgba($color-bg-secondary, 0.3);
+  }
+
+  &__hour-label {
+    height: 60px;
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: $color-text-muted;
+    text-align: right;
+    padding-right: 8px;
+    padding-top: 4px;
+    border-bottom: 1px solid rgba($color-border, 0.1);
+    box-sizing: border-box;
+  }
+
+  &__days-grid {
+    flex: 1;
+    position: relative;
+  }
+
+  &__hour-row {
+    height: 60px;
+    border-bottom: 1px solid rgba($color-border, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__columns {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  &__day-column {
+    position: relative;
+    border-right: 1px solid rgba($color-border, 0.1);
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  &__event {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    padding: 4px;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.65rem;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1;
+    transition: transform $transition-fast, box-shadow $transition-fast;
+    border-left: 3px solid rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+  }
+
+  &__event-title {
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.1;
+  }
+
+  &__event-time {
+    font-size: 0.55rem;
+    opacity: 0.8;
+    margin-top: 1px;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

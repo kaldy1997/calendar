@@ -1,0 +1,41 @@
+@use './styles/variables' as *;
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 430px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  background-color: $color-bg-primary;
+  padding-bottom: 80px; /* Space for ViewSelector */
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-xl;
+    background: rgba($color-bg-primary, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid $color-border;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+
+    span {
+      color: $color-accent-light;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: $spacing-lg $spacing-xl;
+    display: flex;
+    flex-direction: column;
+  }
+}

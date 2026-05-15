@@ -1,0 +1,74 @@
+@use '../../styles/variables' as *;
+
+.year-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-md 0;
+  animation: fade-in 0.3s ease-out;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-md;
+    row-gap: $spacing-xl;
+  }
+}
+
+.mini-month {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform $transition-fast;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &__title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: $color-text-primary;
+    margin-bottom: $spacing-xs;
+    text-align: center;
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 2px;
+  }
+
+  &__weekday {
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: $color-text-muted;
+    text-align: center;
+  }
+
+  &__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+  }
+
+  &__day {
+    font-size: 0.55rem;
+    font-weight: 500;
+    color: $color-text-secondary;
+    text-align: center;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--weekend {
+      color: #4facfe;
+    }
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,0 +1,44 @@
+@use '../../styles/variables' as *;
+
+.view-selector {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: $spacing-md $spacing-xl $spacing-xl;
+  background: linear-gradient(to top, rgba($color-bg-primary, 1) 50%, rgba($color-bg-primary, 0));
+  display: flex;
+  justify-content: center;
+  z-index: 40;
+
+  &__container {
+    display: flex;
+    background: $color-bg-card;
+    border-radius: $radius-xl;
+    padding: $spacing-xs;
+    box-shadow: $shadow-md;
+    border: 1px solid $color-border;
+    width: 100%; /* Full width */
+    max-width: none;
+  }
+
+  &__btn {
+    flex: 1; /* Even distribution */
+    padding: $spacing-sm $spacing-xl;
+    border-radius: $radius-xl;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    color: $color-text-secondary;
+    transition: all $transition-fast;
+
+    &:hover:not(&--active) {
+      color: $color-text-primary;
+    }
+
+    &--active {
+      background: $color-surface-hover;
+      color: $color-text-primary;
+      font-weight: 600;
+    }
+  }
+}

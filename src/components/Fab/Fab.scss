@@ -1,0 +1,27 @@
+@use '../../styles/variables' as *;
+
+.fab {
+  position: fixed;
+  bottom: calc($spacing-2xl + 60px); /* 60px para salvar el ViewSelector si lo hay */
+  right: $spacing-xl;
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-full;
+  background-color: $color-accent;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: $shadow-lg;
+  transition: transform $transition-fast, background-color $transition-fast;
+  z-index: 50;
+
+  &:hover {
+    background-color: $color-accent-light;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}

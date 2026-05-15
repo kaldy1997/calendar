@@ -1,0 +1,125 @@
+@use '../../styles/variables' as *;
+
+.day-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  animation: slide-in-right 0.3s ease-out;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-lg 0;
+    margin-bottom: $spacing-xl;
+  }
+
+  &__back-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius-full;
+    background: $color-surface;
+    font-size: $font-size-xl;
+    color: $color-text-primary;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $color-surface-hover;
+    }
+  }
+
+  &__date {
+    font-size: $font-size-md;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: $color-text-primary;
+
+    &--weekend {
+      color: #4facfe;
+    }
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__event-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__event-card {
+    display: flex;
+    align-items: center;
+    gap: $spacing-lg;
+    background: $color-bg-card;
+    padding: $spacing-md $spacing-lg;
+    border-radius: $radius-lg;
+    border: 1px solid $color-border;
+    transition: transform $transition-fast;
+
+    &:hover {
+      transform: translateX(4px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  &__event-time {
+    display: flex;
+    flex-direction: column;
+    min-width: 50px;
+    text-align: right;
+  }
+
+  &__time-start {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $color-text-primary;
+  }
+
+  &__time-end {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+
+  &__event-info {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    flex: 1;
+  }
+
+  &__event-indicator {
+    width: 4px;
+    height: 24px;
+    border-radius: $radius-sm;
+  }
+
+  &__event-title {
+    font-size: $font-size-base;
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  &__empty-state {
+    padding: $spacing-2xl;
+    text-align: center;
+    color: $color-text-muted;
+    font-style: italic;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

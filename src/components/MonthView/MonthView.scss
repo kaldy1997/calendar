@@ -1,0 +1,127 @@
+@use '../../styles/variables' as *;
+
+.month-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  touch-action: pan-y;
+  animation: fade-in 0.3s ease-out;
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: $spacing-xs;
+  }
+
+  &__weekday {
+    text-align: center;
+    font-size: $font-size-xs;
+    font-weight: 600;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: $spacing-sm 0;
+  }
+
+  &__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 0;
+    flex: 1;
+    /* Container borders removed to avoid double lines with individual cells */
+  }
+
+  &__day {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-xs;
+    background: $color-bg-primary;
+    border: 1px solid $color-border;
+    margin-right: -1px;
+    margin-bottom: -1px;
+    transition: all $transition-fast;
+    position: relative;
+    user-select: none;
+    min-height: 0;
+    overflow: hidden;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    &:active {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    &--today {
+      background: rgba($color-today, 0.03);
+      
+      .month-view__day-number {
+        color: $color-today;
+        background: rgba($color-today, 0.1);
+        padding: 0 4px;
+        border-radius: 4px;
+      }
+    }
+
+    &--weekend {
+      .month-view__day-number {
+        color: #4facfe;
+      }
+    }
+  }
+
+  &__day--empty {
+    background: transparent;
+    border: none;
+  }
+
+  &__day-number {
+    align-self: flex-end;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: $color-text-muted;
+    margin-bottom: $spacing-xs;
+    padding-right: 2px;
+  }
+
+  &__day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    flex: 1;
+    overflow: hidden;
+    margin-top: 2px;
+  }
+
+  &__event-tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    text-align: left;
+  }
+
+  &__event-more {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: $color-accent-light;
+    text-align: left;
+    padding-left: 4px;
+    margin-top: 1px;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
