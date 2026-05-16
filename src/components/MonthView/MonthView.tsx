@@ -18,6 +18,8 @@ interface MonthViewProps {
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
+import { getEventsByDateMap, isEventCompletedOnDate } from '../../utils/eventUtils';
+
 export default function MonthView({ currentDate, events, onDateSelect, onNavigate }: MonthViewProps) {
   const today = useMemo(() => new Date(), []);
   const touchStartX = useRef<number | null>(null);
@@ -61,13 +63,8 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
   }, [year, month]);
 
   const eventsByDate = useMemo(() => {
-    const map = new Map<string, CalendarEvent[]>();
-    events.forEach((event) => {
-      const existing = map.get(event.date) || [];
-      map.set(event.date, [...existing, event]);
-    });
-    return map;
-  }, [events]);
+    return getEventsByDateMap(events, calendarDays.map(d => d.date));
+  }, [events, calendarDays]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -116,8 +113,26 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
 
           const dateStr = getDateString(date);
           const dayEvents = eventsByDate.get(dateStr) || [];
-          const displayEvents = dayEvents.slice(0, 3);
-          const extraEventsCount = Math.max(0, dayEvents.length - 3);
+          
+          const pendingEvents = dayEvents.filter(e => !isEventCompletedOnDate(e));
+          const completedEvents = dayEvents.filter(e => isEventCompletedOnDate(e));
+
+          // Build display list: pending events first, then a summary for completed
+          const displayItems: Array<{ type: 'event' | 'summary'; content: any }> = [];
+          const maxPendingSlots = completedEvents.length > 0 ? 2 : 3;
+          
+          pendingEvents.forEach(e => {
+            if (displayItems.length < maxPendingSlots) {
+              displayItems.push({ type: 'event', content: e });
+            }
+          });
+
+          if (completedEvents.length > 0) {
+            displayItems.push({ type: 'summary', content: completedEvents.length });
+          }
+
+          const pendingShown = displayItems.filter(item => item.type === 'event').length;
+          const extraCount = Math.max(0, pendingEvents.length - pendingShown);
 
           return (
             <button
@@ -134,17 +149,23 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
             >
               <div className="month-view__day-number">{date.getDate()}</div>
               <div className="month-view__day-events">
-                {displayEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="month-view__event-tag"
-                    style={{ backgroundColor: event.color }}
-                  >
-                    {event.title}
-                  </div>
+                {displayItems.map((item, i) => (
+                  item.type === 'event' ? (
+                    <div
+                      key={item.content.id}
+                      className="month-view__event-tag"
+                      style={{ backgroundColor: item.content.color }}
+                    >
+                      {item.content.title}
+                    </div>
+                  ) : (
+                    <div key={`summary-${i}`} className="month-view__event-tag month-view__event-tag--completed">
+                      ✅ {item.content} Completadas
+                    </div>
+                  )
                 ))}
-                {extraEventsCount > 0 && (
-                  <div className="month-view__event-more">+{extraEventsCount}</div>
+                {extraCount > 0 && (
+                  <div className="month-view__event-more">+{extraCount}</div>
                 )}
               </div>
             </button>

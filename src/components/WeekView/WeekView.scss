@@ -164,6 +164,13 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       z-index: 2;
     }
+
+    &--completed {
+      opacity: 0.6;
+      .week-view__event-title {
+        text-decoration: line-through;
+      }
+    }
   }
 
   &__event-title {

@@ -3,9 +3,10 @@ import type { CalendarEvent, RepeatMode } from '../../types/types';
 import './EventForm.scss';
 
 interface EventFormProps {
-  onSave: (event: Omit<CalendarEvent, 'id'>) => void;
+  onSave: (event: (Omit<CalendarEvent, 'id'> & { id?: string }) | (Omit<CalendarEvent, 'id'> & { id?: string })[]) => void;
   onCancel: () => void;
   initialDate?: Date;
+  initialEvent?: CalendarEvent;
 }
 
 const REPEAT_OPTIONS: { value: RepeatMode; label: string }[] = [
@@ -25,31 +26,80 @@ const ALARM_OPTIONS = [
   { value: 120, label: '2 horas' },
 ];
 
-export default function EventForm({ onSave, onCancel, initialDate }: EventFormProps) {
-  const [title, setTitle] = useState('');
+import { CATEGORIES, getCategoryById } from '../../constants/categories';
+import { getDateString } from '../../utils/dateUtils';
+
+export default function EventForm({ onSave, onCancel, initialDate, initialEvent }: EventFormProps) {
+  const [title, setTitle] = useState(initialEvent?.title || '');
   const [date, setDate] = useState(
-    (initialDate || new Date()).toISOString().split('T')[0]
+    initialEvent?.date || (initialDate || new Date()).toISOString().split('T')[0]
   );
-  const [startTime, setStartTime] = useState('09:00');
-  const [endTime, setEndTime] = useState('10:00');
-  const [repeat, setRepeat] = useState<RepeatMode>('none');
-  const [alarms, setAlarms] = useState<number[]>([]);
-  const [description, setDescription] = useState('');
+  const [startTime, setStartTime] = useState(initialEvent?.startTime || '09:00');
+  const [endTime, setEndTime] = useState(initialEvent?.endTime || '10:00');
+  const [repeat, setRepeat] = useState<RepeatMode>(initialEvent?.repeat || 'none');
+  const [category, setCategory] = useState(initialEvent?.category || 'routines');
+  const [alarms, setAlarms] = useState<number[]>(initialEvent?.alarms || []);
+  const [description, setDescription] = useState(initialEvent?.description || '');
+  const [timeError, setTimeError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    onSave({
+    // Time validation
+    if (endTime && endTime <= startTime) {
+      setTimeError('La hora de fin debe ser posterior a la de inicio');
+      return;
+    }
+
+    setTimeError(null);
+    const selectedCategory = getCategoryById(category);
+
+    const baseEvent = {
       title,
-      date,
       startTime,
       endTime,
       repeat,
+      category,
+      isCompleted: initialEvent?.isCompleted ?? false,
       alarms,
       description,
-      color: '#7c5cfc', // Default color
-    });
+      color: selectedCategory.color,
+      groupId: initialEvent?.groupId,
+    };
+
+    if (initialEvent) {
+      // Editing single instance
+      onSave({ ...baseEvent, date, id: initialEvent.id });
+    } else if (repeat === 'none') {
+      onSave({ ...baseEvent, date });
+    } else {
+      // Unroll recurrences (New series)
+      const groupId = Math.random().toString(36).substring(2, 11);
+      const instances: (Omit<CalendarEvent, 'id'> & { id?: string })[] = [];
+      const startDate = new Date(date + 'T00:00:00');
+      
+      let maxInstances = 0;
+      if (repeat === 'daily') maxInstances = 365; // 1 year
+      if (repeat === 'weekly') maxInstances = 104; // 2 years
+      if (repeat === 'monthly') maxInstances = 24; // 2 years
+      if (repeat === 'yearly') maxInstances = 5; // 5 years
+
+      for (let i = 0; i < maxInstances; i++) {
+        const d = new Date(startDate);
+        if (repeat === 'daily') d.setDate(startDate.getDate() + i);
+        if (repeat === 'weekly') d.setDate(startDate.getDate() + i * 7);
+        if (repeat === 'monthly') d.setMonth(startDate.getMonth() + i);
+        if (repeat === 'yearly') d.setFullYear(startDate.getFullYear() + i);
+        
+        instances.push({
+          ...baseEvent,
+          date: getDateString(d),
+          groupId
+        });
+      }
+      onSave(instances);
+    }
   };
 
   const toggleAlarm = (value: number) => {
@@ -58,6 +108,21 @@ export default function EventForm({ onSave, onCancel, initialDate }: EventFormPr
         ? prev.filter(a => a !== value) 
         : [...prev, value]
     );
+  };
+
+  const handleTimeChange = (type: 'start' | 'end', value: string) => {
+    // Basic format check for HH:mm
+    const [h, m] = value.split(':').map(Number);
+    if (m >= 60) {
+      // Correct invalid minutes to 59 if manually typed (some browsers allow this)
+      const corrected = `${String(h).padStart(2, '0')}:59`;
+      if (type === 'start') setStartTime(corrected);
+      else setEndTime(corrected);
+    } else {
+      if (type === 'start') setStartTime(value);
+      else setEndTime(value);
+    }
+    setTimeError(null); // Clear error when user changes time
   };
 
   return (
@@ -72,7 +137,7 @@ export default function EventForm({ onSave, onCancel, initialDate }: EventFormPr
         <button 
           className="event-form__save" 
           onClick={handleSubmit}
-          disabled={!title.trim()}
+          disabled={!title.trim() || !!timeError}
           aria-label="Guardar"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -107,42 +172,60 @@ export default function EventForm({ onSave, onCancel, initialDate }: EventFormPr
         </div>
 
         {/* Times */}
-        <div className="event-form__field event-form__field--row">
-          <div className="event-form__subfield">
-            <label className="event-form__label" htmlFor="event-start">Inicio</label>
-            <input
-              id="event-start"
-              type="time"
-              className="event-form__input"
-              value={startTime}
-              onChange={e => setStartTime(e.target.value)}
-            />
+        <div className="event-form__field">
+          <div className="event-form__field--row">
+            <div className="event-form__subfield">
+              <label className="event-form__label" htmlFor="event-start">Inicio</label>
+              <input
+                id="event-start"
+                type="time"
+                className={`event-form__input ${timeError ? 'event-form__input--error' : ''}`}
+                value={startTime}
+                onChange={e => handleTimeChange('start', e.target.value)}
+              />
+            </div>
+            <div className="event-form__subfield">
+              <label className="event-form__label" htmlFor="event-end">Fin</label>
+              <input
+                id="event-end"
+                type="time"
+                className={`event-form__input ${timeError ? 'event-form__input--error' : ''}`}
+                value={endTime}
+                onChange={e => handleTimeChange('end', e.target.value)}
+              />
+            </div>
           </div>
-          <div className="event-form__subfield">
-            <label className="event-form__label" htmlFor="event-end">Fin</label>
-            <input
-              id="event-end"
-              type="time"
-              className="event-form__input"
-              value={endTime}
-              onChange={e => setEndTime(e.target.value)}
-            />
-          </div>
+          {timeError && <div className="event-form__error-msg">{timeError}</div>}
         </div>
 
-        {/* Recurrence */}
-        <div className="event-form__field">
-          <label className="event-form__label" htmlFor="event-repeat">Repetir</label>
-          <select 
-            id="event-repeat"
-            className="event-form__select"
-            value={repeat}
-            onChange={e => setRepeat(e.target.value as RepeatMode)}
-          >
-            {REPEAT_OPTIONS.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
+        {/* Category & Recurrence Row */}
+        <div className="event-form__field event-form__field--row">
+          <div className="event-form__subfield">
+            <label className="event-form__label" htmlFor="event-category">Categoría</label>
+            <select 
+              id="event-category"
+              className="event-form__select"
+              value={category}
+              onChange={e => setCategory(e.target.value)}
+            >
+              {CATEGORIES.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="event-form__subfield">
+            <label className="event-form__label" htmlFor="event-repeat">Repetir</label>
+            <select 
+              id="event-repeat"
+              className="event-form__select"
+              value={repeat}
+              onChange={e => setRepeat(e.target.value as RepeatMode)}
+            >
+              {REPEAT_OPTIONS.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Alarms (Multi-select pills) */}

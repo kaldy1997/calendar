@@ -1,4 +1,7 @@
 import type { ViewMode } from '../../types/types';
+import yearIcon from '../../assets/icons/year.svg?raw';
+import monthIcon from '../../assets/icons/month.svg?raw';
+import weekIcon from '../../assets/icons/week.svg?raw';
 import './ViewSelector.scss';
 
 interface ViewSelectorProps {
@@ -6,15 +9,15 @@ interface ViewSelectorProps {
   onChange: (view: ViewMode) => void;
 }
 
-const VIEWS: { id: ViewMode; label: string }[] = [
-  { id: 'year', label: 'Año' },
-  { id: 'month', label: 'Mes' },
-  { id: 'week', label: 'Semana' },
+const VIEWS: { id: ViewMode; label: string; icon: string }[] = [
+  { id: 'year', label: 'Año', icon: yearIcon },
+  { id: 'month', label: 'Mes', icon: monthIcon },
+  { id: 'week', label: 'Semana', icon: weekIcon },
 ];
 
 export default function ViewSelector({ currentView, onChange }: ViewSelectorProps) {
   return (
-    <div className="view-selector">
+    <nav className="view-selector">
       <div className="view-selector__container">
         {VIEWS.map((view) => (
           <button
@@ -24,10 +27,14 @@ export default function ViewSelector({ currentView, onChange }: ViewSelectorProp
             data-testid={`view-selector-${view.id}`}
             aria-pressed={currentView === view.id}
           >
-            {view.label}
+            <span 
+              className="view-selector__icon" 
+              dangerouslySetInnerHTML={{ __html: view.icon }} 
+            />
+            <span className="view-selector__label">{view.label}</span>
           </button>
         ))}
       </div>
-    </div>
+    </nav>
   );
 }

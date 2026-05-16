@@ -39,7 +39,7 @@ describe('MonthView', () => {
 
   it('renders event titles in the grid', () => {
     const events: CalendarEvent[] = [
-      { id: '1', title: 'Reunión Importante', date: '2026-05-15', startTime: '10:00', color: 'red' },
+      { id: '1', title: 'Reunión Importante', date: '2026-05-15', startTime: '10:00', color: 'red', category: 'work' },
     ];
     render(
       <MonthView 
@@ -55,10 +55,10 @@ describe('MonthView', () => {
 
   it('shows +N indicator when there are more than 3 events', () => {
     const events: CalendarEvent[] = [
-      { id: '1', title: 'Ev1', date: '2026-05-15', startTime: '10:00', color: 'red' },
-      { id: '2', title: 'Ev2', date: '2026-05-15', startTime: '11:00', color: 'blue' },
-      { id: '3', title: 'Ev3', date: '2026-05-15', startTime: '12:00', color: 'green' },
-      { id: '4', title: 'Ev4', date: '2026-05-15', startTime: '13:00', color: 'yellow' },
+      { id: '1', title: 'Ev1', date: '2026-05-15', startTime: '10:00', color: 'red', category: 'work' },
+      { id: '2', title: 'Ev2', date: '2026-05-15', startTime: '11:00', color: 'blue', category: 'work' },
+      { id: '3', title: 'Ev3', date: '2026-05-15', startTime: '12:00', color: 'green', category: 'work' },
+      { id: '4', title: 'Ev4', date: '2026-05-15', startTime: '13:00', color: 'yellow', category: 'work' },
     ];
     render(
       <MonthView 

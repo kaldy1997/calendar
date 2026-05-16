@@ -13,6 +13,7 @@ interface CalendarProps {
   onDateSelect?: (date: Date) => void;
   onMonthChange?: (year: number, month: number) => void;
   onViewChange?: (view: ViewMode) => void;
+  onEventClick?: (event: CalendarEvent) => void;
 }
 
 function Calendar({ 
@@ -20,7 +21,8 @@ function Calendar({
   events = [], 
   onDateSelect, 
   onMonthChange,
-  onViewChange
+  onViewChange,
+  onEventClick
 }: CalendarProps) {
   const today = useMemo(() => new Date(), []);
   const [currentDate, setCurrentDate] = useState(
@@ -125,6 +127,7 @@ function Calendar({
             events={events}
             onDateSelect={handleDateSelect}
             onNavigate={handleNavigate}
+            onEventClick={(event) => onEventClick?.(event)}
           />
         )}
       </div>

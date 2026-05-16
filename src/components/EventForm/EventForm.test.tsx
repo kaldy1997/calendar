@@ -1,10 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import EventForm from './EventForm';
 
 describe('EventForm', () => {
   const mockOnSave = vi.fn();
   const mockOnCancel = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('renders all form fields', () => {
     render(<EventForm onSave={mockOnSave} onCancel={mockOnCancel} />);
@@ -65,5 +69,52 @@ describe('EventForm', () => {
     
     fireEvent.click(alarmBtn);
     expect(alarmBtn).not.toHaveClass('event-form__alarm-pill--active');
+  });
+
+  it('pre-fills data when editing an event', () => {
+    const initialEvent = {
+      id: '123',
+      title: 'Evento Existente',
+      date: '2026-06-01',
+      startTime: '15:00',
+      endTime: '16:00',
+      category: 'sports',
+      color: '#22c55e',
+      repeat: 'weekly' as const,
+      description: 'Desc test'
+    };
+    render(<EventForm onSave={mockOnSave} onCancel={mockOnCancel} initialEvent={initialEvent} />);
+    
+    expect(screen.getByDisplayValue('Evento Existente')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('2026-06-01')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('15:00')).toBeInTheDocument();
+    expect(screen.getByText('Deportes')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Desc test')).toBeInTheDocument();
+  });
+
+  it('unrolls recurrences when saving a new recurring event', () => {
+    render(<EventForm onSave={mockOnSave} onCancel={mockOnCancel} />);
+    
+    fireEvent.change(screen.getByPlaceholderText('Título del evento'), { target: { value: 'Serie' } });
+    fireEvent.change(screen.getByLabelText('Repetir'), { target: { value: 'daily' } });
+    fireEvent.click(screen.getByLabelText('Guardar'));
+    
+    expect(mockOnSave).toHaveBeenCalledWith(expect.any(Array));
+    const savedArray = mockOnSave.mock.calls[0][0];
+    expect(savedArray.length).toBe(365); // Daily for 1 year
+    expect(savedArray[0].title).toBe('Serie');
+    expect(savedArray[0].groupId).toBeDefined();
+  });
+
+  it('shows error when end time is before start time', () => {
+    render(<EventForm onSave={mockOnSave} onCancel={mockOnCancel} />);
+    
+    fireEvent.change(screen.getByPlaceholderText('Título del evento'), { target: { value: 'Error' } });
+    fireEvent.change(screen.getByLabelText('Inicio'), { target: { value: '10:00' } });
+    fireEvent.change(screen.getByLabelText('Fin'), { target: { value: '09:00' } });
+    fireEvent.click(screen.getByLabelText('Guardar'));
+    
+    expect(screen.getByText(/la hora de fin debe ser posterior/i)).toBeInTheDocument();
+    expect(mockOnSave).not.toHaveBeenCalled();
   });
 });

@@ -117,10 +117,17 @@
       color: rgba($color-text-muted, 0.3);
     }
 
-    &:focus {
-      outline: none;
-      border-color: $color-accent-light;
+    &--error {
+      border-color: #ff4d4d;
+      box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.1);
     }
+  }
+
+  &__error-msg {
+    color: #ff4d4d;
+    font-size: $font-size-xs;
+    margin-top: $spacing-xs;
+    font-weight: 500;
   }
 
   &__input, &__select, &__textarea {
@@ -137,6 +144,11 @@
       outline: none;
       border-color: $color-accent-light;
       box-shadow: 0 0 0 3px rgba($color-accent-light, 0.1);
+    }
+
+    &--error {
+      border-color: #ff4d4d;
+      box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.1);
     }
   }
 

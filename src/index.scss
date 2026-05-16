@@ -74,3 +74,31 @@ img {
   white-space: nowrap;
   border-width: 0;
 }
+
+// ============================================
+// Custom Scrollbar
+// ============================================
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba($color-text-muted, 0.3);
+  border-radius: $radius-full;
+  
+  &:hover {
+    background: rgba($color-accent, 0.5);
+  }
+}
+
+// Firefox support
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba($color-text-muted, 0.3) transparent;
+}

@@ -16,6 +16,7 @@ describe('WeekView', () => {
         events={[]} 
         onDateSelect={() => {}} 
         onNavigate={() => {}} 
+        onEventClick={() => {}}
       />
     );
     const dayNumbers = screen.getAllByText(/[0-9]+/);
@@ -30,6 +31,7 @@ describe('WeekView', () => {
         events={[]} 
         onDateSelect={() => {}} 
         onNavigate={() => {}} 
+        onEventClick={() => {}}
       />
     );
     expect(screen.getByText('0:00')).toBeInTheDocument();
@@ -44,6 +46,7 @@ describe('WeekView', () => {
         events={mockEvents} 
         onDateSelect={() => {}} 
         onNavigate={() => {}} 
+        onEventClick={() => {}}
       />
     );
     expect(screen.getByText('Test Event')).toBeInTheDocument();
@@ -58,6 +61,7 @@ describe('WeekView', () => {
         events={[]} 
         onDateSelect={onDateSelect} 
         onNavigate={() => {}} 
+        onEventClick={() => {}}
       />
     );
     
@@ -66,5 +70,21 @@ describe('WeekView', () => {
     fireEvent.click(day15);
     
     expect(onDateSelect).toHaveBeenCalled();
+  });
+
+  it('calls onEventClick when an event is clicked', () => {
+    const onEventClick = vi.fn();
+    render(
+      <WeekView 
+        currentDate={mockDate} 
+        events={mockEvents} 
+        onDateSelect={() => {}} 
+        onNavigate={() => {}} 
+        onEventClick={onEventClick}
+      />
+    );
+    
+    fireEvent.click(screen.getByText('Test Event'));
+    expect(onEventClick).toHaveBeenCalledWith(mockEvents[0]);
   });
 });

@@ -1,62 +1,174 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from './services/db';
 import { Calendar } from './components/Calendar';
 import { DayDetail } from './components/DayDetail';
 import { ViewSelector } from './components/ViewSelector';
 import { Fab } from './components/Fab';
 import { EventForm } from './components/EventForm';
+import { EventDetail } from './components/EventDetail';
+import { RecurrenceDialog } from './components/RecurrenceDialog';
 import type { CalendarEvent, ViewMode, AppView } from './types/types';
 import './App.scss';
 
 // Richer sample events for demonstration
 const SAMPLE_EVENTS: CalendarEvent[] = [
-  { id: '1', date: '2026-05-15', startTime: '09:15', endTime: '11:30', title: 'Daily Standup', description: 'Reunión rápida de equipo', color: '#7c5cfc' },
-  { id: '2', date: '2026-05-15', startTime: '11:30', endTime: '12:30', title: 'Client Call', description: 'Discutir nuevos requisitos', color: '#4ade80' },
-  { id: '3', date: '2026-05-15', startTime: '14:00', title: 'Lunch', color: '#fbbf24' },
-  { id: '4', date: '2026-05-16', startTime: '10:00', title: 'Deep Work', description: 'Sin interrupciones', color: '#7c5cfc' },
-  { id: '5', date: '2026-05-20', startTime: '10:00', title: 'Dentista', description: 'Limpieza anual', color: '#ff6b8a' },
-  // Day with > 3 events to test overflow
-  { id: '6', date: '2026-05-25', startTime: '08:00', title: 'Gym', color: '#4ade80' },
-  { id: '7', date: '2026-05-25', startTime: '10:00', title: 'Meeting con diseño', color: '#7c5cfc' },
-  { id: '8', date: '2026-05-25', startTime: '12:00', title: 'Revisión Sprint', color: '#7c5cfc' },
-  { id: '9', date: '2026-05-25', startTime: '15:00', title: 'Coffee Break', color: '#fbbf24' },
+  { id: '1', date: '2026-05-15', startTime: '09:15', endTime: '11:30', title: 'Daily Standup', description: 'Reunión rápida de equipo', color: '#7c5cfc', category: 'routines' },
+  { id: '2', date: '2026-05-15', startTime: '11:30', endTime: '12:30', title: 'Client Call', description: 'Discutir nuevos requisitos', color: '#4ade80', category: 'work' },
+  { id: '3', date: '2026-05-15', startTime: '14:00', title: 'Lunch', color: '#fbbf24', category: 'leisure' },
+  { id: '4', date: '2026-05-16', startTime: '10:00', title: 'Deep Work', description: 'Sin interrupciones', color: '#7c5cfc', category: 'work' },
+  { id: '5', date: '2026-05-20', startTime: '10:00', title: 'Dentista', description: 'Limpieza anual', color: '#ff6b8a', category: 'health' },
+  { id: '6', date: '2026-05-25', startTime: '08:00', title: 'Gym', color: '#4ade80', category: 'sports' },
+  { id: '7', date: '2026-05-25', startTime: '10:00', title: 'Meeting con diseño', color: '#7c5cfc', category: 'work' },
+  { id: '8', date: '2026-05-25', startTime: '12:00', title: 'Revisión Sprint', color: '#7c5cfc', category: 'work' },
+  { id: '9', date: '2026-05-25', startTime: '15:00', title: 'Coffee Break', color: '#fbbf24', category: 'leisure' },
 ];
+
+import { getEventsForDate } from './utils/eventUtils';
 
 function App() {
   const [view, setView] = useState<AppView>('calendar');
   const [viewMode, setViewMode] = useState<ViewMode>('month');
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [events, setEvents] = useState<CalendarEvent[]>(SAMPLE_EVENTS);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [recurrenceAction, setRecurrenceAction] = useState<{ 
+    type: 'edit' | 'delete', 
+    event: CalendarEvent,
+    data?: any 
+  } | null>(null);
+
+  // Dexie Live Query
+  const events = useLiveQuery(() => db.events.toArray()) || [];
+
+  // Seed DB if empty
+  useEffect(() => {
+    const seedDB = async () => {
+      const count = await db.events.count();
+      if (count === 0) {
+        await db.events.bulkAdd(SAMPLE_EVENTS);
+      }
+    };
+    seedDB();
+  }, []);
 
   const handleDateSelect = useCallback((date: Date) => {
     setSelectedDate(date);
     setView('day-detail');
   }, []);
 
+  const handleEventClick = useCallback((event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setView('event-detail');
+  }, []);
+
   const handleBackToCalendar = useCallback(() => {
     setView('calendar');
+    setSelectedEvent(null);
+  }, []);
+
+  const handleBackToDayDetail = useCallback(() => {
+    setView('day-detail');
+    setSelectedEvent(null);
   }, []);
 
   const handleAddEvent = useCallback(() => {
+    setSelectedEvent(null);
     setView('event-form');
   }, []);
 
-  const handleSaveEvent = useCallback((newEvent: Omit<CalendarEvent, 'id'>) => {
-    const eventWithId: CalendarEvent = {
-      ...newEvent,
-      id: Math.random().toString(36).substr(2, 9),
-    };
-    setEvents(prev => [...prev, eventWithId]);
-    setView('calendar');
+  const handleEditEvent = useCallback((event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setView('event-form');
   }, []);
 
+  const handleDeleteEvent = useCallback(async (event: CalendarEvent) => {
+    if (event.groupId) {
+      setRecurrenceAction({ type: 'delete', event });
+    } else {
+      await db.events.delete(event.id);
+      handleBackToCalendar();
+    }
+  }, [handleBackToCalendar]);
+
+  const handleSaveEvent = useCallback(async (eventData: any) => {
+    if (Array.isArray(eventData)) {
+      // New series
+      const eventsWithIds = eventData.map(e => ({
+        ...e,
+        id: Math.random().toString(36).substring(2, 11) + Math.random().toString(36).substring(2, 5),
+      }));
+      await db.events.bulkAdd(eventsWithIds);
+      handleBackToCalendar();
+    } else if (eventData.id) {
+      // Editing
+      const event = events.find(e => e.id === eventData.id);
+      if (event?.groupId) {
+        setRecurrenceAction({ type: 'edit', event, data: eventData });
+      } else {
+        await db.events.put(eventData);
+        handleBackToCalendar();
+      }
+    } else {
+      // New single event
+      const eventWithId: CalendarEvent = {
+        ...eventData,
+        id: Math.random().toString(36).substring(2, 11),
+      };
+      await db.events.add(eventWithId);
+      handleBackToCalendar();
+    }
+  }, [events, handleBackToCalendar]);
+
+  const handleRecurrenceConfirm = useCallback(async (option: 'single' | 'future' | 'all') => {
+    if (!recurrenceAction) return;
+
+    const { type, event, data } = recurrenceAction;
+    const groupId = event.groupId;
+
+    if (type === 'delete') {
+      if (option === 'single') {
+        await db.events.delete(event.id);
+      } else if (option === 'future') {
+        const toDelete = events.filter(e => e.groupId === groupId && e.date >= event.date);
+        await db.events.bulkDelete(toDelete.map(e => e.id));
+      } else if (option === 'all') {
+        const toDelete = events.filter(e => e.groupId === groupId);
+        await db.events.bulkDelete(toDelete.map(e => e.id));
+      }
+    } else if (type === 'edit') {
+      if (option === 'single') {
+        await db.events.put(data);
+      } else if (option === 'future') {
+        const toUpdate = events.filter(e => e.groupId === groupId && e.date >= event.date);
+        const updated = toUpdate.map(e => ({
+          ...e,
+          ...data,
+          id: e.id,
+          date: e.date // Keep original date
+        }));
+        await db.events.bulkPut(updated);
+      } else if (option === 'all') {
+        const toUpdate = events.filter(e => e.groupId === groupId);
+        const updated = toUpdate.map(e => ({
+          ...e,
+          ...data,
+          id: e.id,
+          date: e.date // Keep original date
+        }));
+        await db.events.bulkPut(updated);
+      }
+    }
+
+    setRecurrenceAction(null);
+    handleBackToCalendar();
+  }, [recurrenceAction, events, handleBackToCalendar]);
+
   const eventsForSelectedDate = useMemo(() => {
-    const dateStr = selectedDate.toISOString().split('T')[0];
-    return events.filter(e => e.date === dateStr);
+    return getEventsForDate(events, selectedDate);
   }, [events, selectedDate]);
 
   return (
     <div className="app">
-
       <main className="app__content">
         {view === 'calendar' && (
           <Calendar
@@ -64,6 +176,7 @@ function App() {
             events={events}
             onDateSelect={handleDateSelect}
             onViewChange={setViewMode}
+            onEventClick={handleEventClick}
           />
         )}
         {view === 'day-detail' && (
@@ -71,23 +184,41 @@ function App() {
             date={selectedDate}
             events={eventsForSelectedDate}
             onBack={handleBackToCalendar}
+            onEventClick={handleEventClick}
           />
         )}
         {view === 'event-form' && (
           <EventForm
             onSave={handleSaveEvent}
-            onCancel={handleBackToCalendar}
+            onCancel={selectedEvent ? () => setView('event-detail') : handleBackToCalendar}
             initialDate={selectedDate}
+            initialEvent={selectedEvent || undefined}
+          />
+        )}
+        {view === 'event-detail' && selectedEvent && (
+          <EventDetail
+            event={selectedEvent}
+            onClose={handleBackToCalendar}
+            onEdit={handleEditEvent}
+            onDelete={handleDeleteEvent}
           />
         )}
       </main>
 
-      <Fab onClick={handleAddEvent} />
+      {view === 'calendar' && <Fab onClick={handleAddEvent} />}
 
       {view === 'calendar' && (
         <ViewSelector
           currentView={viewMode}
           onChange={setViewMode}
+        />
+      )}
+
+      {recurrenceAction && (
+        <RecurrenceDialog
+          title={recurrenceAction.type === 'delete' ? 'Eliminar serie' : 'Editar serie'}
+          onSelect={handleRecurrenceConfirm}
+          onCancel={() => setRecurrenceAction(null)}
         />
       )}
     </div>

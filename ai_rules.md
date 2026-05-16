@@ -96,6 +96,11 @@ src/
    - Librerías de terceros.
 6. **Naming**: `describe('ComponentName', () => { it('should...') })`.
 
+### Verificación y Agentes AI
+
+1. **Ejecución de Javascript**: En las verificaciones realizadas en el navegador, los agentes AI tienen permiso explícito para ejecutar Javascript de forma autónoma con el fin de verificar el código, sin necesidad de solicitar autorización previa para cada ejecución.
+2. **Comandos de Test**: Los agentes AI pueden ejecutar comandos de testing como `npm run test` y `npm run test:coverage` de forma autónoma para verificar la estabilidad del proyecto, sin requerir autorización constante.
+
 ### Git / Commits
 
 1. **Conventional Commits**: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `style:`, `chore:`.

@@ -14,12 +14,15 @@ interface WeekViewProps {
   events: CalendarEvent[];
   onDateSelect: (date: Date) => void;
   onNavigate: (delta: number) => void;
+  onEventClick: (event: CalendarEvent) => void;
 }
 
 const WEEKDAYS_SHORT = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-export default function WeekView({ currentDate, events, onDateSelect, onNavigate }: WeekViewProps) {
+import { isEventOnDate, isEventCompletedOnDate } from '../../utils/eventUtils';
+
+export default function WeekView({ currentDate, events, onDateSelect, onNavigate, onEventClick }: WeekViewProps) {
   const today = useMemo(() => new Date(), []);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number | null>(null);
@@ -116,25 +119,27 @@ export default function WeekView({ currentDate, events, onDateSelect, onNavigate
             {/* Event Columns */}
             <div className="week-view__columns">
               {weekDays.map((day, dayIdx) => {
-                const dateStr = getDateString(day);
-                const dayEvents = events.filter(e => e.date === dateStr);
+                const dayEvents = events.filter(e => isEventOnDate(e, day));
 
                 return (
                   <div key={dayIdx} className="week-view__day-column">
-                    {dayEvents.map(event => (
-                      <div 
-                        key={event.id} 
-                        className="week-view__event"
-                        style={getEventStyle(event)}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Event clicked:', event);
-                        }}
-                      >
-                        <div className="week-view__event-title">{event.title}</div>
-                        <div className="week-view__event-time">{event.startTime}</div>
-                      </div>
-                    ))}
+                    {dayEvents.map(event => {
+                      const isDone = isEventCompletedOnDate(event);
+                      return (
+                        <div 
+                          key={event.id} 
+                          className={`week-view__event ${isDone ? 'week-view__event--completed' : ''}`}
+                          style={getEventStyle(event)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEventClick(event);
+                          }}
+                        >
+                          <div className="week-view__event-title">{event.title}</div>
+                          <div className="week-view__event-time">{event.startTime}</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })}
