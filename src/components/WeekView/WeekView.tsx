@@ -15,6 +15,7 @@ interface WeekViewProps {
   onDateSelect: (date: Date) => void;
   onNavigate: (delta: number) => void;
   onEventClick: (event: CalendarEvent) => void;
+  direction?: 'left' | 'right' | null;
 }
 
 const WEEKDAYS_SHORT = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
@@ -22,7 +23,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 import { isEventOnDate, isEventCompletedOnDate } from '../../utils/eventUtils';
 
-export default function WeekView({ currentDate, events, onDateSelect, onNavigate, onEventClick }: WeekViewProps) {
+export default function WeekView({ currentDate, events, onDateSelect, onNavigate, onEventClick, direction }: WeekViewProps) {
   const today = useMemo(() => new Date(), []);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number | null>(null);
@@ -73,7 +74,7 @@ export default function WeekView({ currentDate, events, onDateSelect, onNavigate
 
   return (
     <div 
-      className="week-view"
+      className={`week-view ${direction ? `week-view--animate-${direction}` : ''}`}
       data-testid="week-view"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}

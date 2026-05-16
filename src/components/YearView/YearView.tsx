@@ -10,11 +10,12 @@ interface YearViewProps {
   currentDate: Date;
   onMonthSelect: (month: number) => void;
   onNavigate: (delta: number) => void;
+  direction?: 'left' | 'right' | null;
 }
 
 const WEEKDAYS_INITIALS = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-export default function YearView({ currentDate, onMonthSelect, onNavigate }: YearViewProps) {
+export default function YearView({ currentDate, onMonthSelect, onNavigate, direction }: YearViewProps) {
   const year = currentDate.getFullYear();
   const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
   const touchStartX = useRef<number | null>(null);
@@ -37,7 +38,7 @@ export default function YearView({ currentDate, onMonthSelect, onNavigate }: Yea
 
   return (
     <div 
-      className="year-view" 
+      className={`year-view ${direction ? `year-view--animate-${direction}` : ''}`} 
       data-testid="year-view"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}

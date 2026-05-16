@@ -12,6 +12,14 @@
     gap: $spacing-md;
     row-gap: $spacing-xl;
   }
+
+  &--animate-left {
+    animation: slide-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &--animate-right {
+    animation: slide-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .mini-month {

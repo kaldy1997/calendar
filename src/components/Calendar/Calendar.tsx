@@ -28,6 +28,8 @@ function Calendar({
   const [currentDate, setCurrentDate] = useState(
     () => new Date(today.getFullYear(), today.getMonth(), 1)
   );
+  const [direction, setDirection] = useState<'left' | 'right' | null>(null);
+  const [animKey, setAnimKey] = useState(0);
   
   // Flag to skip the next viewMode reset (used when navigating from YearView)
   const skipResetRef = useRef(false);
@@ -52,6 +54,8 @@ function Calendar({
 
   const handleNavigate = useCallback(
     (delta: number) => {
+      setDirection(delta > 0 ? 'left' : 'right');
+      setAnimKey(prev => prev + 1);
       setCurrentDate((prev) => {
         let next: Date;
         if (viewMode === 'week') {
@@ -71,6 +75,8 @@ function Calendar({
 
   const goToToday = useCallback(() => {
     const now = new Date();
+    setDirection(null);
+    setAnimKey(prev => prev + 1);
     if (viewMode === 'week') {
       setCurrentDate(getStartOfWeek(now));
     } else {
@@ -108,26 +114,32 @@ function Calendar({
       <div className="calendar__view-container">
         {viewMode === 'month' && (
           <MonthView
+            key={`month-${animKey}`}
             currentDate={currentDate}
             events={events}
             onDateSelect={handleDateSelect}
             onNavigate={handleNavigate}
+            direction={direction}
           />
         )}
         {viewMode === 'year' && (
           <YearView
+            key={`year-${animKey}`}
             currentDate={currentDate}
             onMonthSelect={handleMonthSelect}
             onNavigate={handleNavigate}
+            direction={direction}
           />
         )}
         {viewMode === 'week' && (
           <WeekView
+            key={`week-${animKey}`}
             currentDate={currentDate}
             events={events}
             onDateSelect={handleDateSelect}
             onNavigate={handleNavigate}
             onEventClick={(event) => onEventClick?.(event)}
+            direction={direction}
           />
         )}
       </div>

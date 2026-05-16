@@ -14,13 +14,14 @@ interface MonthViewProps {
   events: CalendarEvent[];
   onDateSelect: (date: Date) => void;
   onNavigate: (delta: number) => void;
+  direction?: 'left' | 'right' | null;
 }
 
 const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
 import { getEventsByDateMap, isEventCompletedOnDate } from '../../utils/eventUtils';
 
-export default function MonthView({ currentDate, events, onDateSelect, onNavigate }: MonthViewProps) {
+export default function MonthView({ currentDate, events, onDateSelect, onNavigate, direction }: MonthViewProps) {
   const today = useMemo(() => new Date(), []);
   const touchStartX = useRef<number | null>(null);
   const SWIPE_THRESHOLD = 50;
@@ -94,7 +95,7 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
 
   return (
     <div 
-      className="month-view" 
+      className={`month-view ${direction ? `month-view--animate-${direction}` : ''}`} 
       data-testid="month-view"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}

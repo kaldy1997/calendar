@@ -102,3 +102,12 @@ img {
   scrollbar-width: thin;
   scrollbar-color: rgba($color-text-muted, 0.3) transparent;
 }
+@keyframes slide-left {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-right {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
