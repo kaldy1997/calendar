@@ -8,6 +8,7 @@ import { Fab } from './components/Fab';
 import { EventForm } from './components/EventForm';
 import { EventDetail } from './components/EventDetail';
 import { RecurrenceDialog } from './components/RecurrenceDialog';
+import { alarmService } from './services/alarmService';
 import type { CalendarEvent, ViewMode, AppView } from './types/types';
 import './App.scss';
 
@@ -40,15 +41,18 @@ function App() {
   // Dexie Live Query
   const events = useLiveQuery(() => db.events.toArray()) || [];
 
-  // Seed DB if empty
+  // Seed DB and Request Permissions
   useEffect(() => {
-    const seedDB = async () => {
+    const initApp = async () => {
+      // Seed
       const count = await db.events.count();
       if (count === 0) {
         await db.events.bulkAdd(SAMPLE_EVENTS);
       }
+      // Permissions
+      await alarmService.requestPermissions();
     };
-    seedDB();
+    initApp();
   }, []);
 
   const handleDateSelect = useCallback((date: Date) => {
@@ -85,6 +89,7 @@ function App() {
     if (event.groupId) {
       setRecurrenceAction({ type: 'delete', event });
     } else {
+      await alarmService.cancelAlarms(event.id);
       await db.events.delete(event.id);
       handleBackToCalendar();
     }
@@ -98,6 +103,10 @@ function App() {
         id: Math.random().toString(36).substring(2, 11) + Math.random().toString(36).substring(2, 5),
       }));
       await db.events.bulkAdd(eventsWithIds);
+      // Schedule alarms for all events in series
+      for (const e of eventsWithIds) {
+        await alarmService.scheduleAlarms(e);
+      }
       handleBackToCalendar();
     } else if (eventData.id) {
       // Editing
@@ -105,7 +114,9 @@ function App() {
       if (event?.groupId) {
         setRecurrenceAction({ type: 'edit', event, data: eventData });
       } else {
+        await alarmService.cancelAlarms(eventData.id);
         await db.events.put(eventData);
+        await alarmService.scheduleAlarms(eventData);
         handleBackToCalendar();
       }
     } else {
@@ -115,6 +126,7 @@ function App() {
         id: Math.random().toString(36).substring(2, 11),
       };
       await db.events.add(eventWithId);
+      await alarmService.scheduleAlarms(eventWithId);
       handleBackToCalendar();
     }
   }, [events, handleBackToCalendar]);
@@ -127,35 +139,38 @@ function App() {
 
     if (type === 'delete') {
       if (option === 'single') {
+        await alarmService.cancelAlarms(event.id);
         await db.events.delete(event.id);
       } else if (option === 'future') {
         const toDelete = events.filter(e => e.groupId === groupId && e.date >= event.date);
+        for (const e of toDelete) await alarmService.cancelAlarms(e.id);
         await db.events.bulkDelete(toDelete.map(e => e.id));
       } else if (option === 'all') {
         const toDelete = events.filter(e => e.groupId === groupId);
+        for (const e of toDelete) await alarmService.cancelAlarms(e.id);
         await db.events.bulkDelete(toDelete.map(e => e.id));
       }
     } else if (type === 'edit') {
       if (option === 'single') {
+        await alarmService.cancelAlarms(data.id);
         await db.events.put(data);
+        await alarmService.scheduleAlarms(data);
       } else if (option === 'future') {
         const toUpdate = events.filter(e => e.groupId === groupId && e.date >= event.date);
-        const updated = toUpdate.map(e => ({
-          ...e,
-          ...data,
-          id: e.id,
-          date: e.date // Keep original date
-        }));
-        await db.events.bulkPut(updated);
+        for (const e of toUpdate) {
+          const updated = { ...e, ...data, id: e.id, date: e.date };
+          await alarmService.cancelAlarms(e.id);
+          await db.events.put(updated);
+          await alarmService.scheduleAlarms(updated);
+        }
       } else if (option === 'all') {
         const toUpdate = events.filter(e => e.groupId === groupId);
-        const updated = toUpdate.map(e => ({
-          ...e,
-          ...data,
-          id: e.id,
-          date: e.date // Keep original date
-        }));
-        await db.events.bulkPut(updated);
+        for (const e of toUpdate) {
+          const updated = { ...e, ...data, id: e.id, date: e.date };
+          await alarmService.cancelAlarms(e.id);
+          await db.events.put(updated);
+          await alarmService.scheduleAlarms(updated);
+        }
       }
     }
 

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CalendarApp</string>
+    <string name="title_activity_main">CalendarApp</string>
+    <string name="package_name">com.kaldy.calendar</string>
+    <string name="custom_url_scheme">com.kaldy.calendar</string>
+</resources>
