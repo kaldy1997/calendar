@@ -13,19 +13,6 @@ import { App as CapacitorApp } from '@capacitor/app';
 import type { CalendarEvent, ViewMode, AppView } from './types/types';
 import './App.scss';
 
-// Richer sample events for demonstration
-const SAMPLE_EVENTS: CalendarEvent[] = [
-  { id: '1', date: '2026-05-15', startTime: '09:15', endTime: '11:30', title: 'Daily Standup', description: 'Reunión rápida de equipo', color: '#7c5cfc', category: 'routines' },
-  { id: '2', date: '2026-05-15', startTime: '11:30', endTime: '12:30', title: 'Client Call', description: 'Discutir nuevos requisitos', color: '#4ade80', category: 'work' },
-  { id: '3', date: '2026-05-15', startTime: '14:00', title: 'Lunch', color: '#fbbf24', category: 'leisure' },
-  { id: '4', date: '2026-05-16', startTime: '10:00', title: 'Deep Work', description: 'Sin interrupciones', color: '#7c5cfc', category: 'work' },
-  { id: '5', date: '2026-05-20', startTime: '10:00', title: 'Dentista', description: 'Limpieza anual', color: '#ff6b8a', category: 'health' },
-  { id: '6', date: '2026-05-25', startTime: '08:00', title: 'Gym', color: '#4ade80', category: 'sports' },
-  { id: '7', date: '2026-05-25', startTime: '10:00', title: 'Meeting con diseño', color: '#7c5cfc', category: 'work' },
-  { id: '8', date: '2026-05-25', startTime: '12:00', title: 'Revisión Sprint', color: '#7c5cfc', category: 'work' },
-  { id: '9', date: '2026-05-25', startTime: '15:00', title: 'Coffee Break', color: '#fbbf24', category: 'leisure' },
-];
-
 import { getEventsForDate } from './utils/eventUtils';
 
 function App() {
@@ -42,13 +29,15 @@ function App() {
   // Dexie Live Query
   const events = useLiveQuery(() => db.events.toArray()) || [];
 
-  // Seed DB and Request Permissions
+  // Clear DB (one-off) and Request Permissions
   useEffect(() => {
     const initApp = async () => {
-      // Seed
-      const count = await db.events.count();
-      if (count === 0) {
-        await db.events.bulkAdd(SAMPLE_EVENTS);
+      // One-off reset to start completely fresh
+      const cleared = localStorage.getItem('db_cleared_v3');
+      if (!cleared) {
+        await db.events.clear();
+        await alarmService.cancelAllAlarms();
+        localStorage.setItem('db_cleared_v3', 'true');
       }
       // Permissions
       await alarmService.requestPermissions();
@@ -97,6 +86,7 @@ function App() {
   }, []);
 
   const handleAddEvent = useCallback(() => {
+    setSelectedDate(new Date());
     setSelectedEvent(null);
     setView('event-form');
   }, []);

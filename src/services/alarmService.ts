@@ -97,6 +97,19 @@ class AlarmService {
     });
   }
 
+  async cancelAllAlarms() {
+    try {
+      const pending = await LocalNotifications.getPending();
+      if (pending && pending.notifications && pending.notifications.length > 0) {
+        await LocalNotifications.cancel({
+          notifications: pending.notifications.map(n => ({ id: n.id }))
+        });
+      }
+    } catch (e) {
+      console.warn('Could not cancel all pending alarms:', e);
+    }
+  }
+
   private hashCode(str: string): number {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
