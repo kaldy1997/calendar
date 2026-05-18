@@ -16,10 +16,10 @@ interface CalendarProps {
   onEventClick?: (event: CalendarEvent) => void;
 }
 
-function Calendar({ 
-  viewMode = 'month', 
-  events = [], 
-  onDateSelect, 
+function Calendar({
+  viewMode = 'month',
+  events = [],
+  onDateSelect,
   onMonthChange,
   onViewChange,
   onEventClick
@@ -30,7 +30,7 @@ function Calendar({
   );
   const [direction, setDirection] = useState<'left' | 'right' | null>(null);
   const [animKey, setAnimKey] = useState(0);
-  
+
   // Flag to skip the next viewMode reset (used when navigating from YearView)
   const skipResetRef = useRef(false);
   const year = currentDate.getFullYear();
@@ -49,6 +49,38 @@ function Calendar({
       setCurrentDate(new Date(now.getFullYear(), now.getMonth(), 1));
     }
   }, [viewMode]);
+
+  // --- Swiper Drag / Swipe Gestures Implementation ---
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [transitionTarget, setTransitionTarget] = useState<'prev' | 'next' | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const swipeLocked = useRef<boolean>(false);
+
+  const prevDate = useMemo(() => {
+    if (viewMode === 'week') {
+      const d = new Date(currentDate);
+      d.setDate(currentDate.getDate() - 7);
+      return d;
+    } else if (viewMode === 'year') {
+      return new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), 1);
+    } else {
+      return new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    }
+  }, [currentDate, viewMode]);
+
+  const nextDate = useMemo(() => {
+    if (viewMode === 'week') {
+      const d = new Date(currentDate);
+      d.setDate(currentDate.getDate() + 7);
+      return d;
+    } else if (viewMode === 'year') {
+      return new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), 1);
+    } else {
+      return new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    }
+  }, [currentDate, viewMode]);
 
   const handleNavigate = useCallback(
     (delta: number) => {
@@ -70,6 +102,89 @@ function Calendar({
     },
     [viewMode, onMonthChange]
   );
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (transitionTarget !== null) return; // Prevent swipe during active transitions
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    swipeLocked.current = false;
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    const diffX = touchX - touchStartX.current;
+    const diffY = touchY - touchStartY.current;
+
+    // Lock direction
+    if (!swipeLocked.current) {
+      if (Math.abs(diffY) > Math.abs(diffX)) {
+        touchStartX.current = null;
+        touchStartY.current = null;
+        setIsDragging(false);
+        return;
+      }
+      swipeLocked.current = true;
+    }
+
+    if (e.cancelable) {
+      e.preventDefault();
+    }
+    setDragOffset(diffX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current === null) {
+      setIsDragging(false);
+      setDragOffset(0);
+      return;
+    }
+
+    const threshold = 70;
+    if (dragOffset > threshold) {
+      // Swipe Right -> Smooth transition to Previous Pane (0%)
+      setTransitionTarget('prev');
+      setIsDragging(false);
+
+      setTimeout(() => {
+        if (viewMode === 'week') {
+          handleNavigate(-7);
+        } else if (viewMode === 'year') {
+          handleNavigate(-12);
+        } else {
+          handleNavigate(-1);
+        }
+        setTransitionTarget(null);
+        setDragOffset(0);
+      }, 300);
+    } else if (dragOffset < -threshold) {
+      // Swipe Left -> Smooth transition to Next Pane (-200%)
+      setTransitionTarget('next');
+      setIsDragging(false);
+
+      setTimeout(() => {
+        if (viewMode === 'week') {
+          handleNavigate(7);
+        } else if (viewMode === 'year') {
+          handleNavigate(12);
+        } else {
+          handleNavigate(1);
+        }
+        setTransitionTarget(null);
+        setDragOffset(0);
+      }, 300);
+    } else {
+      // Not enough drag -> Smooth snap back to middle pane (-100%)
+      setIsDragging(false);
+      setDragOffset(0);
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   const goToToday = useCallback(() => {
     const now = new Date();
@@ -110,36 +225,116 @@ function Calendar({
 
       {/* View Container */}
       <div className="calendar__view-container">
-        {viewMode === 'month' && (
-          <MonthView
-            key={`month-${animKey}`}
-            currentDate={currentDate}
-            events={events}
-            onDateSelect={handleDateSelect}
-            onNavigate={handleNavigate}
-            direction={direction}
-          />
-        )}
-        {viewMode === 'year' && (
-          <YearView
-            key={`year-${animKey}`}
-            currentDate={currentDate}
-            onMonthSelect={handleMonthSelect}
-            onNavigate={handleNavigate}
-            direction={direction}
-          />
-        )}
-        {viewMode === 'week' && (
-          <WeekView
-            key={`week-${animKey}`}
-            currentDate={currentDate}
-            events={events}
-            onDateSelect={handleDateSelect}
-            onNavigate={handleNavigate}
-            onEventClick={(event) => onEventClick?.(event)}
-            direction={direction}
-          />
-        )}
+        <div
+          className="calendar__slider-wrapper"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            className="calendar__slider"
+            style={{
+              transform: transitionTarget === 'prev'
+                ? 'translate3d(0, 0, 0)'
+                : transitionTarget === 'next'
+                  ? 'translate3d(-200%, 0, 0)'
+                  : `translate3d(calc(-100% + ${dragOffset}px), 0, 0)`,
+            }}
+          >
+            {/* Previous Pane */}
+            <div className="calendar__pane">
+              {viewMode === 'month' && (
+                <MonthView
+                  currentDate={prevDate}
+                  events={events}
+                  onDateSelect={handleDateSelect}
+                  onNavigate={() => { }}
+                  direction={null}
+                />
+              )}
+              {viewMode === 'week' && (
+                <WeekView
+                  currentDate={prevDate}
+                  events={events}
+                  onDateSelect={handleDateSelect}
+                  onNavigate={() => { }}
+                  onEventClick={onEventClick}
+                  direction={null}
+                />
+              )}
+              {viewMode === 'year' && (
+                <YearView
+                  currentDate={prevDate}
+                  onMonthSelect={handleMonthSelect}
+                  onNavigate={() => { }}
+                  direction={null}
+                />
+              )}
+            </div>
+
+            {/* Current Pane */}
+            <div className="calendar__pane">
+              {viewMode === 'month' && (
+                <MonthView
+                  currentDate={currentDate}
+                  events={events}
+                  onDateSelect={handleDateSelect}
+                  onNavigate={() => { }}
+                  direction={null}
+                />
+              )}
+              {viewMode === 'week' && (
+                <WeekView
+                  currentDate={currentDate}
+                  events={events}
+                  onDateSelect={handleDateSelect}
+                  onNavigate={() => { }}
+                  onEventClick={onEventClick}
+                  direction={null}
+                />
+              )}
+              {viewMode === 'year' && (
+                <YearView
+                  currentDate={currentDate}
+                  onMonthSelect={handleMonthSelect}
+                  onNavigate={() => { }}
+                  direction={null}
+                />
+              )}
+            </div>
+
+            {/* Next Pane */}
+            <div className="calendar__pane">
+              {viewMode === 'month' && (
+                <MonthView
+                  currentDate={nextDate}
+                  events={events}
+                  onDateSelect={handleDateSelect}
+                  onNavigate={() => { }}
+                  direction={null}
+                />
+              )}
+              {viewMode === 'week' && (
+                <WeekView
+                  currentDate={nextDate}
+                  events={events}
+                  onDateSelect={handleDateSelect}
+                  onNavigate={() => { }}
+                  onEventClick={onEventClick}
+                  direction={null}
+                />
+              )}
+              {viewMode === 'year' && (
+                <YearView
+                  currentDate={nextDate}
+                  onMonthSelect={handleMonthSelect}
+                  onNavigate={() => { }}
+                  direction={null}
+                />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

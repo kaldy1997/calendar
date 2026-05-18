@@ -5,7 +5,6 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  animation: fade-in 0.3s ease-out;
   margin: 0 (-$spacing-xl); // Compensate app content padding
 
   &__header {

@@ -18,30 +18,11 @@ const WEEKDAYS_INITIALS = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 export default function YearView({ currentDate, onMonthSelect, onNavigate, direction }: YearViewProps) {
   const year = currentDate.getFullYear();
   const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
-  const touchStartX = useRef<number | null>(null);
-  const SWIPE_THRESHOLD = 50;
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-
-    if (Math.abs(diff) > SWIPE_THRESHOLD) {
-      onNavigate(diff > 0 ? 12 : -12); // Move 12 months (1 year)
-    }
-    touchStartX.current = null;
-  };
 
   return (
     <div 
       className={`year-view ${direction ? `year-view--animate-${direction}` : ''}`} 
       data-testid="year-view"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
     >
       <div className="year-view__grid">
         {months.map((monthIndex) => (

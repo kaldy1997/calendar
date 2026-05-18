@@ -23,8 +23,7 @@ import { getEventsByDateMap, isEventCompletedOnDate } from '../../utils/eventUti
 
 export default function MonthView({ currentDate, events, onDateSelect, onNavigate, direction }: MonthViewProps) {
   const today = useMemo(() => new Date(), []);
-  const touchStartX = useRef<number | null>(null);
-  const SWIPE_THRESHOLD = 50;
+
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -67,20 +66,7 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
     return getEventsByDateMap(events, calendarDays.map(d => d.date));
   }, [events, calendarDays]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-
-    if (Math.abs(diff) > SWIPE_THRESHOLD) {
-      onNavigate(diff > 0 ? 1 : -1);
-    }
-    touchStartX.current = null;
-  };
 
   const getDayClassName = (date: Date): string => {
     const classes = ['month-view__day'];
@@ -97,8 +83,6 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
     <div 
       className={`month-view ${direction ? `month-view--animate-${direction}` : ''}`} 
       data-testid="month-view"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
     >
       <div className="month-view__weekdays">
         {WEEKDAYS.map((day) => (

@@ -25,8 +25,7 @@ import { isEventOnDate, isEventCompletedOnDate } from '../../utils/eventUtils';
 export default function WeekView({ currentDate, events, onDateSelect, onNavigate, onEventClick, direction }: WeekViewProps) {
   const today = useMemo(() => new Date(), []);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const touchStartX = useRef<number | null>(null);
-  const SWIPE_THRESHOLD = 50;
+
 
   const startOfWeek = useMemo(() => getStartOfWeek(currentDate), [currentDate]);
   const weekDays = useMemo(() => getWeekDays(startOfWeek), [startOfWeek]);
@@ -41,20 +40,7 @@ export default function WeekView({ currentDate, events, onDateSelect, onNavigate
     }
   }, []);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-
-    if (Math.abs(diff) > SWIPE_THRESHOLD) {
-      onNavigate(diff > 0 ? 7 : -7); // Navigate by week (7 days)
-    }
-    touchStartX.current = null;
-  };
 
   const getEventStyle = (event: CalendarEvent) => {
     const [startH, startM] = event.startTime.split(':').map(Number);
@@ -75,8 +61,6 @@ export default function WeekView({ currentDate, events, onDateSelect, onNavigate
     <div 
       className={`week-view ${direction ? `week-view--animate-${direction}` : ''}`}
       data-testid="week-view"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
     >
       {/* Week Header */}
       <div className="week-view__header">

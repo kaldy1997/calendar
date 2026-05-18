@@ -11,11 +11,12 @@ describe('Calendar', () => {
   it('handles navigation via swipes in MonthView', () => {
     const onMonthChange = vi.fn();
     render(<Calendar onMonthChange={onMonthChange} />);
-    const view = screen.getByTestId('month-view');
+    const view = screen.getAllByTestId('month-view')[1];
     
     // Swipe left (next month)
-    fireEvent.touchStart(view, { touches: [{ clientX: 300 }] });
-    fireEvent.touchEnd(view, { changedTouches: [{ clientX: 100 }] });
+    fireEvent.touchStart(view, { touches: [{ clientX: 300, clientY: 0 }] });
+    fireEvent.touchMove(view, { touches: [{ clientX: 100, clientY: 0 }] });
+    fireEvent.touchEnd(view, { changedTouches: [{ clientX: 100, clientY: 0 }] });
     
     expect(onMonthChange).toHaveBeenCalledWith(expect.any(Number), expect.any(Number));
   });
@@ -23,11 +24,12 @@ describe('Calendar', () => {
   it('handles navigation via swipes in WeekView', () => {
     const onMonthChange = vi.fn();
     render(<Calendar viewMode="week" onMonthChange={onMonthChange} />);
-    const view = screen.getByTestId('week-view');
+    const view = screen.getAllByTestId('week-view')[1];
     
     // Swipe right (prev week)
-    fireEvent.touchStart(view, { touches: [{ clientX: 100 }] });
-    fireEvent.touchEnd(view, { changedTouches: [{ clientX: 300 }] });
+    fireEvent.touchStart(view, { touches: [{ clientX: 100, clientY: 0 }] });
+    fireEvent.touchMove(view, { touches: [{ clientX: 300, clientY: 0 }] });
+    fireEvent.touchEnd(view, { changedTouches: [{ clientX: 300, clientY: 0 }] });
     
     expect(onMonthChange).toHaveBeenCalled();
   });
@@ -43,7 +45,7 @@ describe('Calendar', () => {
   it('handles handleMonthSelect from YearView', () => {
     const onViewChange = vi.fn();
     render(<Calendar viewMode="year" onViewChange={onViewChange} />);
-    fireEvent.click(screen.getByText(/enero/i));
+    fireEvent.click(screen.getAllByText(/enero/i)[1]);
     expect(onViewChange).toHaveBeenCalledWith('month');
   });
 });
