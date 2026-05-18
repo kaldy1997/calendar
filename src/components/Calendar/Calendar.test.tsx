@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Calendar from './Calendar';
 
 describe('Calendar', () => {
@@ -8,7 +8,7 @@ describe('Calendar', () => {
     expect(screen.getByTestId('calendar')).toBeInTheDocument();
   });
 
-  it('handles navigation via swipes in MonthView', () => {
+  it('handles navigation via swipes in MonthView', async () => {
     const onMonthChange = vi.fn();
     render(<Calendar onMonthChange={onMonthChange} />);
     const view = screen.getAllByTestId('month-view')[1];
@@ -18,10 +18,12 @@ describe('Calendar', () => {
     fireEvent.touchMove(view, { touches: [{ clientX: 100, clientY: 0 }] });
     fireEvent.touchEnd(view, { changedTouches: [{ clientX: 100, clientY: 0 }] });
     
-    expect(onMonthChange).toHaveBeenCalledWith(expect.any(Number), expect.any(Number));
+    await waitFor(() => {
+      expect(onMonthChange).toHaveBeenCalledWith(expect.any(Number), expect.any(Number));
+    }, { timeout: 1000 });
   });
 
-  it('handles navigation via swipes in WeekView', () => {
+  it('handles navigation via swipes in WeekView', async () => {
     const onMonthChange = vi.fn();
     render(<Calendar viewMode="week" onMonthChange={onMonthChange} />);
     const view = screen.getAllByTestId('week-view')[1];
@@ -31,7 +33,9 @@ describe('Calendar', () => {
     fireEvent.touchMove(view, { touches: [{ clientX: 300, clientY: 0 }] });
     fireEvent.touchEnd(view, { changedTouches: [{ clientX: 300, clientY: 0 }] });
     
-    expect(onMonthChange).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onMonthChange).toHaveBeenCalled();
+    }, { timeout: 1000 });
   });
 
   it('handles goToToday', () => {

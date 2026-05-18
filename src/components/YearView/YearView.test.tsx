@@ -6,7 +6,7 @@ describe('YearView', () => {
   const mockDate = new Date(2026, 0, 1);
 
   it('renders 12 months', () => {
-    render(<YearView currentDate={mockDate} onMonthSelect={() => {}} onNavigate={() => {}} />);
+    render(<YearView currentDate={mockDate} onMonthSelect={() => {}} />);
     // There should be 12 month titles
     const monthTitles = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
     monthTitles.forEach(title => {
@@ -16,7 +16,7 @@ describe('YearView', () => {
 
   it('calls onMonthSelect when a month is clicked', () => {
     const onMonthSelect = vi.fn();
-    render(<YearView currentDate={mockDate} onMonthSelect={onMonthSelect} onNavigate={() => {}} />);
+    render(<YearView currentDate={mockDate} onMonthSelect={onMonthSelect} />);
     
     const firstMonth = screen.getByText(/enero/i);
     fireEvent.click(firstMonth);
@@ -24,21 +24,8 @@ describe('YearView', () => {
     expect(onMonthSelect).toHaveBeenCalledWith(0);
   });
 
-  it('calls onNavigate when swiped', () => {
-    const onNavigate = vi.fn();
-    render(<YearView currentDate={mockDate} onMonthSelect={() => {}} onNavigate={onNavigate} />);
-    
-    const yearView = screen.getByTestId('year-view');
-    
-    // Swipe left (next year)
-    fireEvent.touchStart(yearView, { touches: [{ clientX: 200 }] });
-    fireEvent.touchEnd(yearView, { changedTouches: [{ clientX: 100 }] });
-    
-    expect(onNavigate).toHaveBeenCalledWith(12);
-  });
-
   it('highlights weekends in blue', () => {
-    render(<YearView currentDate={mockDate} onMonthSelect={() => {}} onNavigate={() => {}} />);
+    render(<YearView currentDate={mockDate} onMonthSelect={() => {}} />);
     // Check if some days have the weekend class
     const weekendDays = document.querySelectorAll('.mini-month__day--weekend');
     expect(weekendDays.length).toBeGreaterThan(0);

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import App from './App';
 import { db } from './services/db';
@@ -6,6 +6,12 @@ import { db } from './services/db';
 describe('App', () => {
   beforeEach(async () => {
     await db.reset();
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 4, 15)); // May 15, 2026
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   const setupRec = async (id: string) => {
@@ -16,10 +22,16 @@ describe('App', () => {
         { id: id + '3', title: 'Rec', date: '2026-05-17', startTime: '09:00', groupId: id, category: 'work', color: 'blue' },
       ] as any);
     });
-    const allEvents = await db.events.toArray();
-    console.log(`[setupRec ${id}] Database events count:`, allEvents.length, 'events:', allEvents.map(e => `${e.id}: ${e.title} (${e.date})`));
     await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 50));
+    });
+  };
+
+  const clickCalendarDay = async (day: number) => {
+    const days = await screen.findAllByTestId(`calendar-day-${day}`);
+    // The current active pane is the second one (index 1) in the slider
+    await act(async () => {
+      fireEvent.click(days[1]);
     });
   };
 
@@ -41,7 +53,7 @@ describe('App', () => {
 
     // 3. Edit single instance of series
     await setupRec('e');
-    await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
+    await clickCalendarDay(15);
     await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Editar')); });
     fireEvent.change(screen.getByPlaceholderText(/título del evento/i), { target: { value: 'Edited Single' } });
@@ -51,7 +63,7 @@ describe('App', () => {
 
     // 4. Edit future instances
     await setupRec('ef');
-    await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-16')); });
+    await clickCalendarDay(16);
     await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Editar')); });
     fireEvent.change(screen.getByPlaceholderText(/título del evento/i), { target: { value: 'Edited Future' } });
@@ -61,7 +73,7 @@ describe('App', () => {
 
     // 5. Edit all instances
     await setupRec('ea');
-    await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
+    await clickCalendarDay(15);
     await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Editar')); });
     fireEvent.change(screen.getByPlaceholderText(/título del evento/i), { target: { value: 'Edited All' } });
@@ -71,7 +83,7 @@ describe('App', () => {
 
     // 6. Delete single
     await setupRec('ds');
-    await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
+    await clickCalendarDay(15);
     await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Eliminar')); });
     await act(async () => { fireEvent.click(screen.getByText('Solo este evento')); });
@@ -79,7 +91,7 @@ describe('App', () => {
 
     // 7. Delete future
     await setupRec('df');
-    await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-16')); });
+    await clickCalendarDay(16);
     await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Eliminar')); });
     await act(async () => { fireEvent.click(screen.getByText('Este y los siguientes')); });
@@ -87,7 +99,7 @@ describe('App', () => {
 
     // 8. Delete all
     await setupRec('da');
-    await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
+    await clickCalendarDay(15);
     await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Eliminar')); });
     await act(async () => { fireEvent.click(screen.getByText('Toda la serie')); });
@@ -96,6 +108,6 @@ describe('App', () => {
     // 9. Cancels
     await act(async () => { fireEvent.click(screen.getByTestId('view-selector-week')); });
     await act(async () => { fireEvent.click(screen.getByTestId('view-selector-year')); });
-    await act(async () => { fireEvent.click(screen.getByText(/enero/i)); }); // YearView navigation
+    await act(async () => { fireEvent.click(screen.getAllByText(/enero/i)[1]); }); // YearView navigation
   });
 });

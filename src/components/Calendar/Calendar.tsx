@@ -28,8 +28,6 @@ function Calendar({
   const [currentDate, setCurrentDate] = useState(
     () => new Date(today.getFullYear(), today.getMonth(), 1)
   );
-  const [direction, setDirection] = useState<'left' | 'right' | null>(null);
-  const [animKey, setAnimKey] = useState(0);
 
   // Flag to skip the next viewMode reset (used when navigating from YearView)
   const skipResetRef = useRef(false);
@@ -52,7 +50,6 @@ function Calendar({
 
   // --- Swiper Drag / Swipe Gestures Implementation ---
   const [dragOffset, setDragOffset] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
   const [transitionTarget, setTransitionTarget] = useState<'prev' | 'next' | null>(null);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
@@ -84,8 +81,6 @@ function Calendar({
 
   const handleNavigate = useCallback(
     (delta: number) => {
-      setDirection(delta > 0 ? 'left' : 'right');
-      setAnimKey(prev => prev + 1);
       setCurrentDate((prev) => {
         let next: Date;
         if (viewMode === 'week') {
@@ -108,7 +103,6 @@ function Calendar({
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     swipeLocked.current = false;
-    setIsDragging(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -124,7 +118,6 @@ function Calendar({
       if (Math.abs(diffY) > Math.abs(diffX)) {
         touchStartX.current = null;
         touchStartY.current = null;
-        setIsDragging(false);
         return;
       }
       swipeLocked.current = true;
@@ -138,7 +131,6 @@ function Calendar({
 
   const handleTouchEnd = () => {
     if (touchStartX.current === null) {
-      setIsDragging(false);
       setDragOffset(0);
       return;
     }
@@ -147,7 +139,6 @@ function Calendar({
     if (dragOffset > threshold) {
       // Swipe Right -> Smooth transition to Previous Pane (0%)
       setTransitionTarget('prev');
-      setIsDragging(false);
 
       setTimeout(() => {
         if (viewMode === 'week') {
@@ -163,7 +154,6 @@ function Calendar({
     } else if (dragOffset < -threshold) {
       // Swipe Left -> Smooth transition to Next Pane (-200%)
       setTransitionTarget('next');
-      setIsDragging(false);
 
       setTimeout(() => {
         if (viewMode === 'week') {
@@ -178,7 +168,6 @@ function Calendar({
       }, 300);
     } else {
       // Not enough drag -> Smooth snap back to middle pane (-100%)
-      setIsDragging(false);
       setDragOffset(0);
     }
 
@@ -188,8 +177,6 @@ function Calendar({
 
   const goToToday = useCallback(() => {
     const now = new Date();
-    setDirection(null);
-    setAnimKey(prev => prev + 1);
     if (viewMode === 'week') {
       setCurrentDate(getStartOfWeek(now));
     } else {
@@ -248,7 +235,6 @@ function Calendar({
                   currentDate={prevDate}
                   events={events}
                   onDateSelect={handleDateSelect}
-                  onNavigate={() => { }}
                   direction={null}
                 />
               )}
@@ -257,7 +243,6 @@ function Calendar({
                   currentDate={prevDate}
                   events={events}
                   onDateSelect={handleDateSelect}
-                  onNavigate={() => { }}
                   onEventClick={onEventClick}
                   direction={null}
                 />
@@ -266,7 +251,6 @@ function Calendar({
                 <YearView
                   currentDate={prevDate}
                   onMonthSelect={handleMonthSelect}
-                  onNavigate={() => { }}
                   direction={null}
                 />
               )}
@@ -279,7 +263,6 @@ function Calendar({
                   currentDate={currentDate}
                   events={events}
                   onDateSelect={handleDateSelect}
-                  onNavigate={() => { }}
                   direction={null}
                 />
               )}
@@ -288,7 +271,6 @@ function Calendar({
                   currentDate={currentDate}
                   events={events}
                   onDateSelect={handleDateSelect}
-                  onNavigate={() => { }}
                   onEventClick={onEventClick}
                   direction={null}
                 />
@@ -297,7 +279,6 @@ function Calendar({
                 <YearView
                   currentDate={currentDate}
                   onMonthSelect={handleMonthSelect}
-                  onNavigate={() => { }}
                   direction={null}
                 />
               )}
@@ -310,7 +291,6 @@ function Calendar({
                   currentDate={nextDate}
                   events={events}
                   onDateSelect={handleDateSelect}
-                  onNavigate={() => { }}
                   direction={null}
                 />
               )}
@@ -319,7 +299,6 @@ function Calendar({
                   currentDate={nextDate}
                   events={events}
                   onDateSelect={handleDateSelect}
-                  onNavigate={() => { }}
                   onEventClick={onEventClick}
                   direction={null}
                 />
@@ -328,7 +307,6 @@ function Calendar({
                 <YearView
                   currentDate={nextDate}
                   onMonthSelect={handleMonthSelect}
-                  onNavigate={() => { }}
                   direction={null}
                 />
               )}

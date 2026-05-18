@@ -12,7 +12,6 @@ describe('MonthView', () => {
         currentDate={mockDate} 
         events={[]} 
         onDateSelect={() => {}} 
-        onNavigate={() => {}} 
       />
     );
     const daysGrid = screen.getByTestId('calendar-days');
@@ -26,7 +25,6 @@ describe('MonthView', () => {
         currentDate={mockDate} 
         events={[]} 
         onDateSelect={onDateSelect} 
-        onNavigate={() => {}} 
       />
     );
 
@@ -46,7 +44,6 @@ describe('MonthView', () => {
         currentDate={mockDate} 
         events={events} 
         onDateSelect={() => {}} 
-        onNavigate={() => {}} 
       />
     );
 
@@ -65,7 +62,6 @@ describe('MonthView', () => {
         currentDate={mockDate} 
         events={events} 
         onDateSelect={() => {}} 
-        onNavigate={() => {}} 
       />
     );
 

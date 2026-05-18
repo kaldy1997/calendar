@@ -15,7 +15,6 @@ describe('WeekView', () => {
         currentDate={mockDate} 
         events={[]} 
         onDateSelect={() => {}} 
-        onNavigate={() => {}} 
         onEventClick={() => {}}
       />
     );
@@ -30,7 +29,6 @@ describe('WeekView', () => {
         currentDate={mockDate} 
         events={[]} 
         onDateSelect={() => {}} 
-        onNavigate={() => {}} 
         onEventClick={() => {}}
       />
     );
@@ -45,7 +43,6 @@ describe('WeekView', () => {
         currentDate={mockDate} 
         events={mockEvents} 
         onDateSelect={() => {}} 
-        onNavigate={() => {}} 
         onEventClick={() => {}}
       />
     );
@@ -60,7 +57,6 @@ describe('WeekView', () => {
         currentDate={mockDate} 
         events={[]} 
         onDateSelect={onDateSelect} 
-        onNavigate={() => {}} 
         onEventClick={() => {}}
       />
     );
@@ -79,7 +75,6 @@ describe('WeekView', () => {
         currentDate={mockDate} 
         events={mockEvents} 
         onDateSelect={() => {}} 
-        onNavigate={() => {}} 
         onEventClick={onEventClick}
       />
     );

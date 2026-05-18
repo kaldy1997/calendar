@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import type { CalendarEvent } from '../../types/types';
 import { 
   getDaysInMonth, 
@@ -13,7 +13,6 @@ interface MonthViewProps {
   currentDate: Date;
   events: CalendarEvent[];
   onDateSelect: (date: Date) => void;
-  onNavigate: (delta: number) => void;
   direction?: 'left' | 'right' | null;
 }
 
@@ -21,7 +20,7 @@ const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
 import { getEventsByDateMap, isEventCompletedOnDate } from '../../utils/eventUtils';
 
-export default function MonthView({ currentDate, events, onDateSelect, onNavigate, direction }: MonthViewProps) {
+export default function MonthView({ currentDate, events, onDateSelect, direction }: MonthViewProps) {
   const today = useMemo(() => new Date(), []);
 
 
