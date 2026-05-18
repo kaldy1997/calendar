@@ -56,6 +56,12 @@ export default function EventDetail({ event, onClose, onEdit, onDelete }: EventD
               {event.startTime}{event.endTime ? ` — ${event.endTime}` : ''}
             </span>
           </div>
+          {event.location && (
+            <div className="event-detail-view__info-item">
+              <span className="event-detail-view__icon">📍</span>
+              <span className="event-detail-view__text">{event.location}</span>
+            </div>
+          )}
           {event.repeat && event.repeat !== 'none' && (
             <div className="event-detail-view__info-item">
               <span className="event-detail-view__icon">🔄</span>

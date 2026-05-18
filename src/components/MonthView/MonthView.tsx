@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import type { CalendarEvent } from '../../types/types';
 import { 
   getDaysInMonth, 
@@ -82,7 +82,7 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
     touchStartX.current = null;
   };
 
-  const getDayClassName = (date: Date, isCurrentMonth: boolean): string => {
+  const getDayClassName = (date: Date): string => {
     const classes = ['month-view__day'];
     if (isSameDay(date, today)) {
       classes.push('month-view__day--today');
@@ -138,7 +138,7 @@ export default function MonthView({ currentDate, events, onDateSelect, onNavigat
           return (
             <button
               key={index}
-              className={getDayClassName(date, isCurrentMonth)}
+              className={getDayClassName(date)}
               onClick={() => onDateSelect(date)}
               aria-label={date.toLocaleDateString('es-ES', {
                 weekday: 'long',

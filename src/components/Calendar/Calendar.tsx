@@ -33,9 +33,7 @@ function Calendar({
   
   // Flag to skip the next viewMode reset (used when navigating from YearView)
   const skipResetRef = useRef(false);
-
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
 
   // Reset to today when view mode changes per user request
   // But skip it if we are navigating explicitly from YearView

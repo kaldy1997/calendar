@@ -13,6 +13,7 @@ export interface CalendarEvent {
   groupId?: string; // To link individual instances of a recurring series
   repeat?: RepeatMode;
   alarms?: number[]; // Minutes before
+  location?: string;
 }
 
 export type ViewMode = 'year' | 'month' | 'week';

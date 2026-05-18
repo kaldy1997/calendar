@@ -14,29 +14,11 @@ class AlarmService {
     const [hours, minutes] = event.startTime.split(':').map(Number);
     eventDate.setHours(hours, minutes, 0, 0);
 
-    const notifications = event.alarms.map((alarmType, index) => {
+    const notifications = event.alarms.map((alarmMinutes, index) => {
       let alarmDate = new Date(eventDate);
       
-      switch (alarmType) {
-        case 'at_time':
-          // No changes
-          break;
-        case '5_min':
-          alarmDate.setMinutes(alarmDate.getMinutes() - 5);
-          break;
-        case '15_min':
-          alarmDate.setMinutes(alarmDate.getMinutes() - 15);
-          break;
-        case '30_min':
-          alarmDate.setMinutes(alarmDate.getMinutes() - 30);
-          break;
-        case '1_hour':
-          alarmDate.setHours(alarmDate.getHours() - 1);
-          break;
-        case '1_day':
-          alarmDate.setDate(alarmDate.getDate() - 1);
-          break;
-      }
+      // alarmMinutes is the number of minutes before the event starts
+      alarmDate.setMinutes(alarmDate.getMinutes() - alarmMinutes);
 
       // Generate a numeric ID from event.id and index
       // event.id is a string (often random or timestamp)

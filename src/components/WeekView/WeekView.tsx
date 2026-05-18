@@ -3,7 +3,6 @@ import type { CalendarEvent } from '../../types/types';
 import { 
   getStartOfWeek, 
   getWeekDays, 
-  getDateString, 
   isSameDay, 
   isWeekend 
 } from '../../utils/dateUtils';

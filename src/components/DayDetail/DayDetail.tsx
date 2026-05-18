@@ -10,7 +10,6 @@ interface DayDetailProps {
 }
 
 import { isEventCompletedOnDate } from '../../utils/eventUtils';
-import { getDateString } from '../../utils/dateUtils';
 import { db } from '../../services/db';
 
 export default function DayDetail({ date, events, onBack, onEventClick }: DayDetailProps) {

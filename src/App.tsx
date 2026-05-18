@@ -70,11 +70,6 @@ function App() {
     setSelectedEvent(null);
   }, []);
 
-  const handleBackToDayDetail = useCallback(() => {
-    setView('day-detail');
-    setSelectedEvent(null);
-  }, []);
-
   const handleAddEvent = useCallback(() => {
     setSelectedEvent(null);
     setView('event-form');

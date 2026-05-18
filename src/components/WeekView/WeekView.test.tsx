@@ -6,7 +6,7 @@ import type { CalendarEvent } from '../../types/types';
 describe('WeekView', () => {
   const mockDate = new Date(2026, 4, 15); // 15 de Mayo 2026 (Jueves)
   const mockEvents: CalendarEvent[] = [
-    { id: '1', title: 'Test Event', date: '2026-05-15', startTime: '10:00', endTime: '11:00', color: 'blue' }
+    { id: '1', title: 'Test Event', date: '2026-05-15', startTime: '10:00', endTime: '11:00', color: 'blue', category: 'work' }
   ];
 
   it('renders 7 day headers', () => {

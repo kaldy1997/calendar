@@ -1,5 +1,5 @@
 import type { CalendarEvent } from '../types/types';
-import { isSameDay, getDateString } from './dateUtils';
+import { getDateString } from './dateUtils';
 
 /**
  * Checks if a given event occurs on a specific date.

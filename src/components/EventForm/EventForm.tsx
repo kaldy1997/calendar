@@ -40,6 +40,7 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
   const [category, setCategory] = useState(initialEvent?.category || 'routines');
   const [alarms, setAlarms] = useState<number[]>(initialEvent?.alarms || []);
   const [description, setDescription] = useState(initialEvent?.description || '');
+  const [location, setLocation] = useState(initialEvent?.location || '');
   const [timeError, setTimeError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,6 +65,7 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
       isCompleted: initialEvent?.isCompleted ?? false,
       alarms,
       description,
+      location,
       color: selectedCategory.color,
       groupId: initialEvent?.groupId,
     };
@@ -255,6 +257,19 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows={4}
+          />
+        </div>
+
+        {/* Location */}
+        <div className="event-form__field">
+          <label className="event-form__label" htmlFor="event-location">Ubicación</label>
+          <input
+            id="event-location"
+            type="text"
+            className="event-form__input"
+            placeholder="Añadir ubicación..."
+            value={location}
+            onChange={e => setLocation(e.target.value)}
           />
         </div>
       </form>
