@@ -1,7 +1,12 @@
 import Dexie, { type Table } from 'dexie';
 import type { CalendarEvent } from '../types/types';
 
-const dbName = typeof process !== 'undefined' && process.env.VITEST
+const isVitest = typeof globalThis !== 'undefined' && 
+  (globalThis as any).process && 
+  (globalThis as any).process.env && 
+  (globalThis as any).process.env.VITEST;
+
+const dbName = isVitest
   ? `CalendarDatabase_${Math.random().toString(36).substring(2, 11)}`
   : 'CalendarDatabase';
 
