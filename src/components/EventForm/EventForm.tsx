@@ -117,14 +117,21 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
   const handleTimeChange = (type: 'start' | 'end', value: string) => {
     // Basic format check for HH:mm
     const [h, m] = value.split(':').map(Number);
+    let finalValue = value;
     if (m >= 60) {
       // Correct invalid minutes to 59 if manually typed (some browsers allow this)
-      const corrected = `${String(h).padStart(2, '0')}:59`;
-      if (type === 'start') setStartTime(corrected);
-      else setEndTime(corrected);
+      finalValue = `${String(h).padStart(2, '0')}:59`;
+    }
+
+    if (type === 'start') {
+      setStartTime(finalValue);
+      // Automatically set end time to 1 hour later
+      const [startH, startM] = finalValue.split(':').map(Number);
+      const endH = (startH + 1) % 24;
+      const calculatedEnd = `${String(endH).padStart(2, '0')}:${String(startM).padStart(2, '0')}`;
+      setEndTime(calculatedEnd);
     } else {
-      if (type === 'start') setStartTime(value);
-      else setEndTime(value);
+      setEndTime(finalValue);
     }
     setTimeError(null); // Clear error when user changes time
   };
