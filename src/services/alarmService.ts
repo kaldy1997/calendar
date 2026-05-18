@@ -3,33 +3,77 @@ import type { CalendarEvent } from '../types/types';
 
 class AlarmService {
   async requestPermissions() {
-    const { display } = await LocalNotifications.requestPermissions();
-    return display === 'granted';
+    try {
+      const { display } = await LocalNotifications.requestPermissions();
+      if (display === 'granted') {
+        try {
+          // Create custom Android notification channels
+          await LocalNotifications.createChannel({
+            id: 'loud-alarm-channel',
+            name: 'Alarmas de Eventos (Sonido Fuerte)',
+            description: 'Alarmas que suenan con sonido de alarma al comenzar el evento',
+            importance: 5, // MAX importance (heads-up / banner + sound)
+            sound: 'alarm.mp3', // Plays res/raw/alarm.mp3
+            visibility: 1, // Public
+            vibration: true
+          });
+
+          await LocalNotifications.createChannel({
+            id: 'reminders-channel',
+            name: 'Recordatorios (Estándar)',
+            description: 'Recordatorios con sonido de notificación estándar antes del evento',
+            importance: 3, // Standard importance
+            visibility: 1,
+            vibration: true
+          });
+        } catch (err) {
+          console.error('Error al crear canales de notificaciones:', err);
+        }
+        return true;
+      }
+    } catch (e) {
+      console.warn('LocalNotifications are not available in this environment:', e);
+    }
+    return false;
   }
 
   async scheduleAlarms(event: CalendarEvent) {
-    if (!event.alarms || event.alarms.length === 0) return;
+    const alarmsList = [...(event.alarms || [])];
+
+    // If loud alarm is enabled, ensure we schedule a 0 minute alarm (at the exact start time)
+    if (event.useAlarmSound && !alarmsList.includes(0)) {
+      alarmsList.push(0);
+    }
+
+    if (alarmsList.length === 0) return;
 
     const eventDate = new Date(event.date);
     const [hours, minutes] = event.startTime.split(':').map(Number);
     eventDate.setHours(hours, minutes, 0, 0);
 
-    const notifications = event.alarms.map((alarmMinutes, index) => {
+    const notifications = alarmsList.map((alarmMinutes, index) => {
       let alarmDate = new Date(eventDate);
-      
-      // alarmMinutes is the number of minutes before the event starts
       alarmDate.setMinutes(alarmDate.getMinutes() - alarmMinutes);
 
-      // Generate a numeric ID from event.id and index
-      // event.id is a string (often random or timestamp)
       const numericId = Math.abs(this.hashCode(event.id + index));
+      const isLoudAlarm = (alarmMinutes === 0 && event.useAlarmSound);
+
+      let bodyText = `El evento comienza a las ${event.startTime}`;
+      if (isLoudAlarm) {
+        bodyText = `¡Es hora! El evento ha comenzado: ${event.startTime}`;
+      } else if (alarmMinutes > 0) {
+        bodyText = alarmMinutes >= 60 
+          ? `El evento comienza en ${Math.round(alarmMinutes / 60)} hora(s) (a las ${event.startTime})`
+          : `El evento comienza en ${alarmMinutes} minutos (a las ${event.startTime})`;
+      }
 
       return {
-        title: `Recordatorio: ${event.title}`,
-        body: `El evento comienza a las ${event.startTime}`,
+        title: isLoudAlarm ? `🚨 ALARMA: ${event.title}` : `Recordatorio: ${event.title}`,
+        body: bodyText,
         id: numericId,
         schedule: { at: alarmDate, allowWhileIdle: true },
-        sound: 'alarm.mp3', // This will work if we add the file to res/raw
+        sound: isLoudAlarm ? 'alarm.mp3' : undefined,
+        channelId: isLoudAlarm ? 'loud-alarm-channel' : 'reminders-channel',
         attachments: [],
         extra: { eventId: event.id }
       };
@@ -43,9 +87,8 @@ class AlarmService {
   }
 
   async cancelAlarms(eventId: string) {
-    // We can't easily query by extra data, so we might need to cancel by range 
-    // or keep track of IDs. For now, we'll use the deterministic ID logic.
-    const idsToCancel = [0, 1, 2, 3, 4, 5].map(index => ({
+    // Cancel up to 10 possible scheduled alarms for this event ID
+    const idsToCancel = Array.from({ length: 10 }, (_, index) => ({
       id: Math.abs(this.hashCode(eventId + index))
     }));
     

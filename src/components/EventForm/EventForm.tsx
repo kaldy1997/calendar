@@ -39,6 +39,7 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
   const [repeat, setRepeat] = useState<RepeatMode>(initialEvent?.repeat || 'none');
   const [category, setCategory] = useState(initialEvent?.category || 'routines');
   const [alarms, setAlarms] = useState<number[]>(initialEvent?.alarms || []);
+  const [useAlarmSound, setUseAlarmSound] = useState<boolean>(initialEvent?.useAlarmSound || false);
   const [description, setDescription] = useState(initialEvent?.description || '');
   const [location, setLocation] = useState(initialEvent?.location || '');
   const [timeError, setTimeError] = useState<string | null>(null);
@@ -64,6 +65,7 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
       category,
       isCompleted: initialEvent?.isCompleted ?? false,
       alarms,
+      useAlarmSound,
       description,
       location,
       color: selectedCategory.color,
@@ -245,6 +247,19 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Loud Alarm Toggle */}
+        <div className="event-form__field event-form__field--toggle">
+          <label className="event-form__toggle-label">
+            <input
+              type="checkbox"
+              className="event-form__toggle-checkbox"
+              checked={useAlarmSound}
+              onChange={e => setUseAlarmSound(e.target.checked)}
+            />
+            <span className="event-form__toggle-text">🚨 Hacer sonar alarma al comenzar</span>
+          </label>
         </div>
 
         {/* Description */}

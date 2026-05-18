@@ -14,6 +14,7 @@ export interface CalendarEvent {
   repeat?: RepeatMode;
   alarms?: number[]; // Minutes before
   location?: string;
+  useAlarmSound?: boolean;
 }
 
 export type ViewMode = 'year' | 'month' | 'week';

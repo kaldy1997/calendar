@@ -9,6 +9,7 @@ import { EventForm } from './components/EventForm';
 import { EventDetail } from './components/EventDetail';
 import { RecurrenceDialog } from './components/RecurrenceDialog';
 import { alarmService } from './services/alarmService';
+import { App as CapacitorApp } from '@capacitor/app';
 import type { CalendarEvent, ViewMode, AppView } from './types/types';
 import './App.scss';
 
@@ -54,6 +55,31 @@ function App() {
     };
     initApp();
   }, []);
+
+  // Hardware Back Button Navigation Handler
+  useEffect(() => {
+    const backHandler = CapacitorApp.addListener('backButton', () => {
+      if (view === 'event-form') {
+        if (selectedEvent) {
+          setView('event-detail');
+        } else {
+          setView('calendar');
+          setSelectedEvent(null);
+        }
+      } else if (view === 'event-detail') {
+        setView('day-detail');
+      } else if (view === 'day-detail') {
+        setView('calendar');
+        setSelectedEvent(null);
+      } else {
+        CapacitorApp.exitApp();
+      }
+    });
+
+    return () => {
+      backHandler.then((handler: any) => handler.remove());
+    };
+  }, [view, selectedEvent]);
 
   const handleDateSelect = useCallback((date: Date) => {
     setSelectedDate(date);

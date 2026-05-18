@@ -9,11 +9,18 @@ describe('App', () => {
   });
 
   const setupRec = async (id: string) => {
-    await db.events.bulkAdd([
-      { id: id + '1', title: 'Rec', date: '2026-05-15', startTime: '09:00', groupId: id, category: 'work', color: 'blue' },
-      { id: id + '2', title: 'Rec', date: '2026-05-16', startTime: '09:00', groupId: id, category: 'work', color: 'blue' },
-      { id: id + '3', title: 'Rec', date: '2026-05-17', startTime: '09:00', groupId: id, category: 'work', color: 'blue' },
-    ] as any);
+    await act(async () => {
+      await db.events.bulkAdd([
+        { id: id + '1', title: 'Rec', date: '2026-05-15', startTime: '09:00', groupId: id, category: 'work', color: 'blue' },
+        { id: id + '2', title: 'Rec', date: '2026-05-16', startTime: '09:00', groupId: id, category: 'work', color: 'blue' },
+        { id: id + '3', title: 'Rec', date: '2026-05-17', startTime: '09:00', groupId: id, category: 'work', color: 'blue' },
+      ] as any);
+    });
+    const allEvents = await db.events.toArray();
+    console.log(`[setupRec ${id}] Database events count:`, allEvents.length, 'events:', allEvents.map(e => `${e.id}: ${e.title} (${e.date})`));
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 50));
+    });
   };
 
   it('completes a full lifecycle of interactions', async () => {
@@ -35,7 +42,7 @@ describe('App', () => {
     // 3. Edit single instance of series
     await setupRec('e');
     await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
-    await act(async () => { fireEvent.click(await screen.findByText('Rec')); });
+    await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Editar')); });
     fireEvent.change(screen.getByPlaceholderText(/título del evento/i), { target: { value: 'Edited Single' } });
     await act(async () => { fireEvent.click(screen.getByLabelText(/guardar/i)); });
@@ -45,7 +52,7 @@ describe('App', () => {
     // 4. Edit future instances
     await setupRec('ef');
     await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-16')); });
-    await act(async () => { fireEvent.click(await screen.findByText('Rec')); });
+    await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Editar')); });
     fireEvent.change(screen.getByPlaceholderText(/título del evento/i), { target: { value: 'Edited Future' } });
     await act(async () => { fireEvent.click(screen.getByLabelText(/guardar/i)); });
@@ -55,7 +62,7 @@ describe('App', () => {
     // 5. Edit all instances
     await setupRec('ea');
     await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
-    await act(async () => { fireEvent.click(await screen.findByText('Rec')); });
+    await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Editar')); });
     fireEvent.change(screen.getByPlaceholderText(/título del evento/i), { target: { value: 'Edited All' } });
     await act(async () => { fireEvent.click(screen.getByLabelText(/guardar/i)); });
@@ -65,7 +72,7 @@ describe('App', () => {
     // 6. Delete single
     await setupRec('ds');
     await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
-    await act(async () => { fireEvent.click(await screen.findByText('Rec')); });
+    await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Eliminar')); });
     await act(async () => { fireEvent.click(screen.getByText('Solo este evento')); });
     await waitFor(() => { expect(screen.getByTestId('calendar')).toBeInTheDocument(); });
@@ -73,7 +80,7 @@ describe('App', () => {
     // 7. Delete future
     await setupRec('df');
     await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-16')); });
-    await act(async () => { fireEvent.click(await screen.findByText('Rec')); });
+    await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Eliminar')); });
     await act(async () => { fireEvent.click(screen.getByText('Este y los siguientes')); });
     await waitFor(() => { expect(screen.getByTestId('calendar')).toBeInTheDocument(); });
@@ -81,7 +88,7 @@ describe('App', () => {
     // 8. Delete all
     await setupRec('da');
     await act(async () => { fireEvent.click(await screen.findByTestId('calendar-day-15')); });
-    await act(async () => { fireEvent.click(await screen.findByText('Rec')); });
+    await act(async () => { fireEvent.click((await screen.findAllByText('Rec'))[0]); });
     await act(async () => { fireEvent.click(screen.getByText('Eliminar')); });
     await act(async () => { fireEvent.click(screen.getByText('Toda la serie')); });
     await waitFor(() => { expect(screen.getByTestId('calendar')).toBeInTheDocument(); });

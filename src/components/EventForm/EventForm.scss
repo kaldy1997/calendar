@@ -195,6 +195,31 @@
     background-position: right 16px center;
     padding-right: 40px !important; // Extra separation from right
   }
+
+  &__field--toggle {
+    flex-direction: row !important;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-xs 4px;
+  }
+
+  &__toggle-label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    cursor: pointer;
+    user-select: none;
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    font-weight: 500;
+  }
+
+  &__toggle-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: $color-accent-light;
+    cursor: pointer;
+  }
 }
 
 @keyframes slide-up {

@@ -45,12 +45,11 @@ export default function DayDetail({ date, events, onBack, onEventClick }: DayDet
                   data-testid={`event-card-${event.id}`}
                   onClick={() => onEventClick(event)}
                 >
-                  <div className="day-detail__event-checkbox">
+                  <div className="day-detail__event-checkbox" onClick={(e) => e.stopPropagation()}>
                     <input 
                       type="checkbox" 
                       checked={isDone} 
-                      onChange={(e) => {
-                        e.stopPropagation();
+                      onChange={() => {
                         handleToggleComplete(event);
                       }}
                       aria-label="Marcar como completado"

@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.kaldy.calendar',
-  appName: 'CalendarApp',
+  appName: 'Calendario',
   webDir: 'dist'
 };
 
