@@ -9,8 +9,12 @@ import { EventForm } from './components/EventForm';
 import { EventDetail } from './components/EventDetail';
 import { RecurrenceDialog } from './components/RecurrenceDialog';
 import { alarmService } from './services/alarmService';
+import { AlarmsView } from './components/AlarmsView';
+import { TimersView } from './components/TimersView';
+import { AlarmForm } from './components/AlarmForm';
+import { TimerForm } from './components/TimerForm';
 import { App as CapacitorApp } from '@capacitor/app';
-import type { CalendarEvent, ViewMode, AppView } from './types/types';
+import type { CalendarEvent, ViewMode, AppView, CustomAlarm } from './types/types';
 import './App.scss';
 
 import { getEventsForDate } from './utils/eventUtils';
@@ -25,6 +29,7 @@ function App() {
     event: CalendarEvent,
     data?: any 
   } | null>(null);
+  const [selectedAlarm, setSelectedAlarm] = useState<CustomAlarm | null>(null);
 
   // Dexie Live Query
   const events = useLiveQuery(() => db.events.toArray()) || [];
@@ -60,6 +65,13 @@ function App() {
       } else if (view === 'day-detail') {
         setView('calendar');
         setSelectedEvent(null);
+      } else if (view === 'alarm-form') {
+        setView('alarms');
+        setSelectedAlarm(null);
+      } else if (view === 'timer-form') {
+        setView('timers');
+      } else if (view === 'alarms' || view === 'timers') {
+        setView('calendar');
       } else {
         CapacitorApp.exitApp();
       }
@@ -229,14 +241,46 @@ function App() {
             onDelete={handleDeleteEvent}
           />
         )}
+        {view === 'alarms' && (
+          <AlarmsView 
+            events={events} 
+            onAddAlarm={() => {
+              setSelectedAlarm(null);
+              setView('alarm-form');
+            }} 
+            onEditAlarm={(alarm) => {
+              setSelectedAlarm(alarm);
+              setView('alarm-form');
+            }}
+          />
+        )}
+        {view === 'timers' && (
+          <TimersView onAddTimer={() => setView('timer-form')} />
+        )}
+        {view === 'alarm-form' && (
+          <AlarmForm 
+            alarm={selectedAlarm} 
+            onClose={() => {
+              setView('alarms');
+              setSelectedAlarm(null);
+            }} 
+          />
+        )}
+        {view === 'timer-form' && (
+          <TimerForm onClose={() => setView('timers')} />
+        )}
       </main>
 
       {view === 'calendar' && <Fab onClick={handleAddEvent} />}
 
-      {view === 'calendar' && (
+      {['calendar', 'alarms', 'timers'].includes(view) && (
         <ViewSelector
-          currentView={viewMode}
-          onChange={setViewMode}
+          currentView={view}
+          currentViewMode={viewMode}
+          onNavigate={(newView, mode) => {
+            setView(newView);
+            if (mode) setViewMode(mode);
+          }}
         />
       )}
 

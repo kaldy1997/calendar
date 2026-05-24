@@ -1,0 +1,308 @@
+@use '../../styles/variables' as *;
+
+.timers-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-left: -$spacing-xl;
+  margin-right: -$spacing-xl;
+  width: calc(100% + #{$spacing-xl} * 2);
+  background: $color-bg-primary;
+  color: $color-text-primary;
+  padding-bottom: 80px; // account for bottom nav
+  position: relative;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-xl;
+    padding: $spacing-sm 0;
+    margin-top: $spacing-sm;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $color-text-primary;
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-xl 0;
+    padding-bottom: 100px; // extra spacing to scroll past FAB
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2xl;
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__section-title {
+    font-size: $font-size-sm;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $color-text-muted;
+    letter-spacing: 1px;
+    padding-left: $spacing-xl;
+  }
+
+  &__empty {
+    padding: $spacing-xl;
+    background: transparent;
+    border: none;
+    text-align: center;
+    color: rgba($color-text-secondary, 0.85);
+    font-size: $font-size-sm;
+    font-style: italic;
+  }
+
+  /* Active Timers List & Cards */
+  &__active-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    padding: 0 $spacing-lg;
+  }
+
+  &__active-card {
+    background: $color-bg-card;
+    border-top: 1px solid $color-border;
+    border-bottom: 1px solid $color-border;
+    border-radius: $radius-lg;
+    padding: $spacing-md $spacing-xl;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing-md;
+    position: relative;
+    overflow: hidden;
+    transition: all $transition-base;
+
+    &--finished {
+      border-bottom: 1px solid rgba(#ef4444, 0.4);
+      box-shadow: inset 0 0 15px rgba(#ef4444, 0.1);
+      animation: pulse-red-inset 2s infinite ease-in-out;
+
+      &::before {
+        background: #ef4444;
+      }
+
+      .timers-view__btn-control--cancel {
+        color: #ef4444;
+        border-color: rgba(#ef4444, 0.3);
+        background: rgba(#ef4444, 0.1);
+
+        &:active {
+          background: rgba(#ef4444, 0.2);
+        }
+      }
+    }
+  }
+
+  &__active-info {
+    display: flex;
+    align-items: center;
+  }
+
+  &__active-digits {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: $font-size-xl;
+    font-weight: 800;
+    color: $color-text-primary;
+    letter-spacing: 1px;
+  }
+
+  /* Progress Bar */
+  &__progress-bar-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: $color-bg-secondary;
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, $color-accent 0%, $color-accent-light 100%);
+    transition: width 0.3s ease-out;
+  }
+
+  &__active-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    z-index: 1;
+  }
+
+  &__finished-text {
+    color: #ef4444;
+    font-weight: 800;
+    font-size: $font-size-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: flash 1s infinite alternate;
+  }
+
+  &__btn-control {
+    cursor: pointer;
+    border: none;
+    transition: all $transition-fast;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--icon {
+      width: 36px;
+      height: 36px;
+      border-radius: $radius-full;
+      box-shadow: none;
+    }
+
+    &--pause {
+      background: rgba($color-accent, 0.15);
+      color: $color-accent-light;
+      border: 1px solid rgba($color-accent, 0.3);
+
+      &:active {
+        background: rgba($color-accent, 0.25);
+      }
+    }
+
+    &--resume {
+      background: rgba(#10b981, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(#10b981, 0.3);
+
+      &:active {
+        background: rgba(#10b981, 0.25);
+      }
+    }
+
+    &--cancel {
+      background: rgba($color-surface, 0.5);
+      color: $color-text-secondary;
+      border: 1px solid $color-border;
+
+      &:active {
+        background: $color-surface-hover;
+      }
+    }
+  }
+
+  /* Preset Presets List */
+  &__preset-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    padding: 0 $spacing-xl;
+  }
+
+  &__preset-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-md $spacing-xl;
+    background: $color-bg-card;
+    border-top: 1px solid $color-border;
+    border-bottom: 1px solid $color-border;
+    border-radius: $radius-lg;
+    transition: all $transition-base;
+
+    &:active {
+      background: rgba($color-surface-hover, 0.5);
+    }
+  }
+
+  &__preset-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__preset-duration-large {
+    font-size: $font-size-md;
+    font-weight: 700;
+    color: $color-text-primary;
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 0.5px;
+  }
+
+  &__preset-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  &__preset-start {
+    background: linear-gradient(135deg, $color-accent 0%, $color-accent-light 100%);
+    color: #fff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba($color-accent, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all $transition-fast;
+
+    svg {
+      margin-left: 2px; // center the play triangle visually
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__preset-delete {
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xs;
+    border-radius: $radius-sm;
+    transition: all $transition-fast;
+
+    &:active {
+      color: #ff4d4d;
+      background: rgba(#ff4d4d, 0.15);
+    }
+  }
+}
+
+@keyframes pulse-red-inset {
+
+  0%,
+  100% {
+    box-shadow: inset 0 0 15px rgba(#ef4444, 0.1);
+  }
+
+  50% {
+    box-shadow: inset 0 0 25px rgba(#ef4444, 0.25);
+  }
+}
+
+@keyframes flash {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.3;
+  }
+}

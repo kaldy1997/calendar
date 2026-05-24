@@ -1,0 +1,159 @@
+@use '../../styles/variables' as *;
+
+.alarm-form {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $color-bg-primary;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  animation: slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 430px;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 1px solid $color-border;
+    background: rgba($color-bg-secondary, 0.8);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  &__header-title {
+    font-size: $font-size-md;
+    font-weight: 700;
+    color: $color-text-primary;
+  }
+
+  &__cancel {
+    color: $color-text-muted;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xs;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $color-text-primary;
+      transform: scale(1.1);
+    }
+  }
+
+  &__save {
+    color: $color-accent-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xs;
+    transition: all $transition-fast;
+
+    &:hover {
+      transform: scale(1.1);
+      color: $color-accent;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    &--row {
+      flex-direction: row;
+      align-items: center;
+      padding: $spacing-xs 0;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    font-weight: 600;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-left: 4px;
+  }
+
+  &__input-time {
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    font-size: $font-size-xl;
+    font-weight: 800;
+    color: $color-text-primary;
+    text-align: center;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      border-color: $color-accent-light;
+      box-shadow: 0 0 0 3px rgba($color-accent-light, 0.1);
+    }
+  }
+
+  &__select {
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    width: 100%;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px !important;
+
+    &:focus {
+      outline: none;
+      border-color: $color-accent-light;
+      box-shadow: 0 0 0 3px rgba($color-accent-light, 0.1);
+    }
+  }
+
+  &__checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    cursor: pointer;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    font-weight: 500;
+    user-select: none;
+  }
+
+  &__checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: $color-accent-light;
+    cursor: pointer;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,146 @@
+@use '../../styles/variables' as *;
+
+.timer-form {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $color-bg-primary;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  animation: slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 430px;
+  margin: 0 auto;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-lg $spacing-xl;
+    border-bottom: 1px solid $color-border;
+    background: rgba($color-bg-secondary, 0.8);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  &__header-title {
+    font-size: $font-size-md;
+    font-weight: 700;
+    color: $color-text-primary;
+  }
+
+  &__cancel {
+    color: $color-text-muted;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xs;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $color-text-primary;
+      transform: scale(1.1);
+    }
+  }
+
+  &__save {
+    color: $color-accent-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xs;
+    transition: all $transition-fast;
+
+    &:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+      transform: scale(1.1);
+      color: $color-accent;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__label {
+    font-size: $font-size-xs;
+    font-weight: 600;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-left: 4px;
+  }
+
+  &__time-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: $spacing-md;
+    padding-top: $spacing-xs;
+  }
+
+  &__time-subfield {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $spacing-sm $spacing-md;
+    gap: $spacing-xs;
+
+    span {
+      font-size: $font-size-sm;
+      color: $color-text-muted;
+      font-weight: 700;
+    }
+  }
+
+  &__input-number {
+    background: transparent;
+    border: none;
+    color: $color-text-primary;
+    font-size: $font-size-md;
+    font-weight: 700;
+    width: 100%;
+    text-align: center;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    appearance: textfield;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

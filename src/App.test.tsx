@@ -106,7 +106,9 @@ describe('App', () => {
     await waitFor(() => { expect(screen.getByTestId('calendar')).toBeInTheDocument(); });
 
     // 9. Cancels
+    await act(async () => { fireEvent.click(screen.getByTestId('view-selector-calendar-tab')); });
     await act(async () => { fireEvent.click(screen.getByTestId('view-selector-week')); });
+    await act(async () => { fireEvent.click(screen.getByTestId('view-selector-calendar-tab')); });
     await act(async () => { fireEvent.click(screen.getByTestId('view-selector-year')); });
     await act(async () => { fireEvent.click(screen.getAllByText(/enero/i)[1]); }); // YearView navigation
   });
