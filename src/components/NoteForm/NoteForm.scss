@@ -1,0 +1,777 @@
+@use '../../styles/variables' as *;
+
+.note-form {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  color: $color-text-primary;
+  transition: background $transition-slow;
+  animation: slide-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  // Scroll Container
+  &__scroll-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: $spacing-md $spacing-lg 120px; // Padding bottom for floating footer
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  // Header Bar
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-md $spacing-lg;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10;
+  }
+
+  &__header-right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__header-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px $spacing-md;
+    border-radius: $radius-sm;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    transition: all $transition-fast;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: $color-text-primary;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    span {
+      font-weight: 600;
+    }
+
+    &.pin-btn {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+
+      &:hover {
+        color: $color-today;
+      }
+
+      &.active {
+        color: $color-today;
+        background: rgba($color-today, 0.15);
+        border-color: rgba($color-today, 0.3);
+      }
+    }
+
+    &.save-btn {
+      background: $color-accent;
+      color: #ffffff;
+      border-color: $color-accent;
+      box-shadow: 0 2px 8px rgba($color-accent, 0.3);
+
+      &:hover {
+        background: $color-accent-light;
+        border-color: $color-accent-light;
+        box-shadow: 0 4px 12px rgba($color-accent, 0.5);
+      }
+    }
+  }
+
+  // Title Input
+  &__title-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-text-primary;
+    padding: $spacing-xs 0;
+    font-family: inherit;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom-color $transition-fast;
+
+    &:focus {
+      outline: none;
+      border-bottom-color: rgba($color-text-primary, 0.1);
+    }
+
+    &::placeholder {
+      color: rgba($color-text-primary, 0.3);
+    }
+  }
+
+  // Color dot picker
+  &__color-picker {
+    display: flex;
+    gap: $spacing-sm;
+    padding: $spacing-xs 0;
+    align-items: center;
+  }
+
+  &__color-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-full;
+    cursor: pointer;
+    position: relative;
+    border: 2px solid transparent;
+    transition: all $transition-fast;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &.selected {
+      border-color: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+      transform: scale(1.05);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: $radius-full;
+      background: #ffffff;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform $transition-fast;
+    }
+
+    &.selected::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  // Tags/Labels Manager
+  &__tags-manager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-xs 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: $spacing-md;
+  }
+
+  &__tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: $font-size-xs;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.08);
+    color: $color-text-secondary;
+    padding: 4px $spacing-sm;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  &__remove-tag-btn {
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: $radius-full;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $color-text-primary;
+    }
+  }
+
+  &__add-tag-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  &__tag-input {
+    background: transparent;
+    border: none;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    color: $color-text-secondary;
+    font-family: inherit;
+    padding: 4px 6px;
+    width: 120px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+
+    &:focus {
+      outline: none;
+      border-bottom-color: $color-accent;
+      color: $color-text-primary;
+    }
+  }
+
+  &__tag-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    box-shadow: $shadow-lg;
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 4px 0;
+    min-width: 150px;
+    z-index: 100;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  &__tag-dropdown-item {
+    padding: $spacing-sm $spacing-md;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    color: $color-text-secondary;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $color-surface-hover;
+      color: $color-text-primary;
+    }
+  }
+
+  // Blocks Container
+  &__blocks-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+    margin-top: $spacing-md;
+  }
+
+  &__block-container {
+    position: relative;
+    display: flex;
+    gap: $spacing-md;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid transparent;
+    transition: all $transition-base;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.05);
+
+      .note-form__block-toolbar {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Block Controls Sidebar/Toolbar
+  &__block-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity $transition-fast;
+    width: 24px;
+    flex-shrink: 0;
+
+    @media (max-width: 600px) {
+      opacity: 0.6; // Keep visible on mobile
+    }
+  }
+
+  &__block-action-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover:not(:disabled) {
+      color: $color-text-primary;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+
+    &.delete:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  &__block-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // 1. TEXT BLOCK
+  &__textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: $color-text-primary;
+    font-size: $font-size-base;
+    line-height: 1.5;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    overflow-y: hidden;
+
+    &::placeholder {
+      color: rgba($color-text-primary, 0.2);
+    }
+  }
+
+  // 2. CHECKLIST (TODO) BLOCK
+  &__todo-block {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__todo-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__todo-item-row {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__todo-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: $color-text-muted;
+    cursor: pointer;
+
+    &.checked {
+      color: $color-success;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__todo-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: $color-text-primary;
+    font-size: $font-size-base;
+    font-family: inherit;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color $transition-fast;
+
+    &:focus {
+      outline: none;
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &.checked {
+      color: $color-text-muted;
+      text-decoration: line-through;
+    }
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+  }
+
+  &__todo-item-delete {
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    font-size: 20px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+
+    &:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+  }
+
+  &__add-subitem-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: $color-accent-light;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 0;
+    align-self: flex-start;
+
+    &:hover {
+      color: $color-accent;
+    }
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  // 3. NUMBERED LIST BLOCK
+  &__numbered-block {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__numbered-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__numbered-item-row {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__numbered-prefix {
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $color-accent-light;
+    width: 20px;
+    text-align: right;
+  }
+
+  &__numbered-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: $color-text-primary;
+    font-size: $font-size-base;
+    font-family: inherit;
+    border-bottom: 1px solid transparent;
+
+    &:focus {
+      outline: none;
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+  }
+
+  &__numbered-item-delete {
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    font-size: 20px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+
+    &:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+  }
+
+  // 4. TABLE BLOCK
+  &__table-block {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__table-actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  &__table-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px $spacing-sm;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: $color-text-secondary;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $color-text-primary;
+    }
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: $radius-sm;
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 300px;
+
+    td {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0;
+    }
+  }
+
+  &__table-input {
+    width: 100%;
+    padding: $spacing-sm;
+    background: transparent;
+    border: none;
+    color: $color-text-primary;
+    font-size: $font-size-sm;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    &::placeholder {
+      color: rgba($color-text-muted, 0.5);
+    }
+  }
+
+  &__table-cell-delete {
+    width: 30px;
+    text-align: center;
+  }
+
+  &__cell-delete-btn {
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: $spacing-sm 0;
+
+    &:hover:not(:disabled) {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.15;
+      cursor: not-allowed;
+    }
+  }
+
+  &__col-delete-row {
+    td {
+      background: rgba(0, 0, 0, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  &__col-delete-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: $color-text-muted;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 4px 0;
+
+    &:hover:not(:disabled) {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.15;
+      cursor: not-allowed;
+    }
+  }
+
+  // Floating Footer Toolbar for Block Insertion
+  &__footer-menu {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    background: rgba($color-bg-secondary, 0.85);
+    border-top: 1px solid $color-border;
+    border-radius: $radius-lg $radius-lg 0 0;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.4);
+    padding: $spacing-sm $spacing-lg env(safe-area-inset-bottom, $spacing-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    z-index: 90;
+  }
+
+  &__footer-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $color-text-muted;
+    letter-spacing: 0.5px;
+  }
+
+  &__footer-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    gap: $spacing-xs;
+  }
+
+  &__insert-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+    border-radius: $radius-sm;
+    color: $color-text-secondary;
+    transition: all $transition-fast;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-accent-light;
+      background: $color-surface;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      margin-bottom: 2px;
+    }
+
+    span {
+      font-size: 10px;
+      font-weight: 600;
+    }
+  }
+
+  // Color Presets Container Shifts
+  &--charcoal {
+    background-color: $color-bg-primary;
+  }
+
+  &--purple {
+    background-color: #0c081d;
+    background-image: radial-gradient(at 0% 0%, rgba(#7c5cfc, 0.08) 0, transparent 50%),
+                      radial-gradient(at 100% 100%, rgba(#7c5cfc, 0.05) 0, transparent 50%);
+  }
+
+  &--blue {
+    background-color: #040d1f;
+    background-image: radial-gradient(at 0% 0%, rgba(#3b82f6, 0.08) 0, transparent 50%),
+                      radial-gradient(at 100% 100%, rgba(#3b82f6, 0.05) 0, transparent 50%);
+  }
+
+  &--emerald {
+    background-color: #03120c;
+    background-image: radial-gradient(at 0% 0%, rgba(#10b981, 0.08) 0, transparent 50%),
+                      radial-gradient(at 100% 100%, rgba(#10b981, 0.05) 0, transparent 50%);
+  }
+
+  &--amber {
+    background-color: #120b02;
+    background-image: radial-gradient(at 0% 0%, rgba(#f59e0b, 0.08) 0, transparent 50%),
+                      radial-gradient(at 100% 100%, rgba(#f59e0b, 0.05) 0, transparent 50%);
+  }
+
+  &--rose {
+    background-color: #14050d;
+    background-image: radial-gradient(at 0% 0%, rgba(#ec4899, 0.08) 0, transparent 50%),
+                      radial-gradient(at 100% 100%, rgba(#ec4899, 0.05) 0, transparent 50%);
+  }
+}

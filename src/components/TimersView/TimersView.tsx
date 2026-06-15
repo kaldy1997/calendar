@@ -3,7 +3,20 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../../services/db';
 import { Fab } from '../Fab';
 import type { ConfiguredTimer, ActiveTimer } from '../../types/types';
+import playIcon from '../../assets/icons/play.svg?raw';
+import pauseIcon from '../../assets/icons/pause.svg?raw';
+import closeIcon from '../../assets/icons/close.svg?raw';
+import stopIcon from '../../assets/icons/stop.svg?raw';
+import trashIcon from '../../assets/icons/trash.svg?raw';
 import './TimersView.scss';
+
+const icons = {
+  play: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: playIcon }} />,
+  pause: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: pauseIcon }} />,
+  close: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: closeIcon }} />,
+  stop: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: stopIcon }} />,
+  trash: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: trashIcon }} />
+};
 
 interface TimersViewProps {
   onAddTimer: () => void;
@@ -166,10 +179,7 @@ export default function TimersView({ onAddTimer }: TimersViewProps) {
                               aria-label="Pausar"
                               data-testid={`active-timer-pause-${timer.id}`}
                             >
-                              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <rect x="6" y="4" width="4" height="16" />
-                                <rect x="14" y="4" width="4" height="16" />
-                              </svg>
+                              {icons.pause}
                             </button>
                           ) : (
                             <button
@@ -178,30 +188,19 @@ export default function TimersView({ onAddTimer }: TimersViewProps) {
                               aria-label="Reanudar"
                               data-testid={`active-timer-resume-${timer.id}`}
                             >
-                              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <polygon points="5 3 19 12 5 21 5 3" />
-                              </svg>
+                              {icons.play}
                             </button>
                           )}
                         </>
                       )}
                       
                       <button
-                        className="timers-view__btn-control timers-view__btn-control--icon timers-view__btn-control--cancel"
+                        className={`timers-view__btn-control timers-view__btn-control--icon ${isFinished ? 'timers-view__btn-control--cancel' : 'timers-view__btn-control--stop'}`}
                         onClick={() => handleCancelTimer(timer.id)}
                         aria-label={isFinished ? "Cerrar" : "Parar"}
                         data-testid={`active-timer-cancel-${timer.id}`}
                       >
-                        {isFinished ? (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                          </svg>
-                        ) : (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <rect x="4" y="4" width="16" height="16" rx="2" />
-                          </svg>
-                        )}
+                        {isFinished ? icons.close : icons.stop}
                       </button>
                     </div>
                   </div>
@@ -235,9 +234,7 @@ export default function TimersView({ onAddTimer }: TimersViewProps) {
                       aria-label="Iniciar temporizador"
                       data-testid={`preset-timer-start-${preset.id}`}
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="5 3 19 12 5 21 5 3" />
-                      </svg>
+                      {icons.play}
                     </button>
                     <button
                       className="timers-view__preset-delete"
@@ -245,10 +242,7 @@ export default function TimersView({ onAddTimer }: TimersViewProps) {
                       aria-label="Eliminar temporizador"
                       data-testid={`preset-timer-delete-${preset.id}`}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                      </svg>
+                      {icons.trash}
                     </button>
                   </div>
                 </div>

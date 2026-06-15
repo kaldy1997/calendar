@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import type { CalendarEvent, CustomAlarm, ConfiguredTimer } from '../types/types';
+import type { CalendarEvent, CustomAlarm, ConfiguredTimer, Note } from '../types/types';
 
 const isVitest = typeof globalThis !== 'undefined' && 
   (globalThis as any).process && 
@@ -14,6 +14,7 @@ export class CalendarDatabase extends Dexie {
   events!: Table<CalendarEvent>;
   customAlarms!: Table<CustomAlarm>;
   customTimers!: Table<ConfiguredTimer>;
+  notes!: Table<Note>;
 
   constructor() {
     super(dbName);
@@ -28,6 +29,12 @@ export class CalendarDatabase extends Dexie {
       events: 'id, date, title',
       customAlarms: 'id, time, isActive',
       customTimers: 'id'
+    });
+    this.version(4).stores({
+      events: 'id, date, title',
+      customAlarms: 'id, time, isActive',
+      customTimers: 'id',
+      notes: 'id, title, isPinned'
     });
   }
 

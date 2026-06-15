@@ -41,6 +41,11 @@
     padding: $spacing-xs;
     transition: all $transition-fast;
 
+    .icon-svg {
+      width: 24px;
+      height: 24px;
+    }
+
     &:hover {
       color: $color-text-primary;
       transform: scale(1.1);
@@ -54,6 +59,11 @@
     justify-content: center;
     padding: $spacing-xs;
     transition: all $transition-fast;
+
+    .icon-svg {
+      width: 24px;
+      height: 24px;
+    }
 
     &:disabled {
       opacity: 0.2;

@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import type { CalendarEvent, RepeatMode } from '../../types/types';
+import closeIcon from '../../assets/icons/close.svg?raw';
+import checkIcon from '../../assets/icons/check.svg?raw';
 import './EventForm.scss';
+
+const icons = {
+  close: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: closeIcon }} />,
+  save: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: checkIcon }} />
+};
 
 interface EventFormProps {
   onSave: (event: (Omit<CalendarEvent, 'id'> & { id?: string }) | (Omit<CalendarEvent, 'id'> & { id?: string })[]) => void;
@@ -140,10 +147,7 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
     <div className="event-form">
       <div className="event-form__header">
         <button className="event-form__cancel" onClick={onCancel} aria-label="Cancelar">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          {icons.close}
         </button>
         <button 
           className="event-form__save" 
@@ -151,9 +155,7 @@ export default function EventForm({ onSave, onCancel, initialDate, initialEvent 
           disabled={!title.trim() || !!timeError}
           aria-label="Guardar"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
+          {icons.save}
         </button>
       </div>
 

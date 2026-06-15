@@ -13,8 +13,10 @@ import { AlarmsView } from './components/AlarmsView';
 import { TimersView } from './components/TimersView';
 import { AlarmForm } from './components/AlarmForm';
 import { TimerForm } from './components/TimerForm';
+import { NotesView } from './components/NotesView';
+import { NoteForm } from './components/NoteForm';
 import { App as CapacitorApp } from '@capacitor/app';
-import type { CalendarEvent, ViewMode, AppView, CustomAlarm } from './types/types';
+import type { CalendarEvent, ViewMode, AppView, CustomAlarm, Note } from './types/types';
 import './App.scss';
 
 import { getEventsForDate } from './utils/eventUtils';
@@ -30,6 +32,7 @@ function App() {
     data?: any 
   } | null>(null);
   const [selectedAlarm, setSelectedAlarm] = useState<CustomAlarm | null>(null);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
   // Dexie Live Query
   const events = useLiveQuery(() => db.events.toArray()) || [];
@@ -70,8 +73,11 @@ function App() {
         setSelectedAlarm(null);
       } else if (view === 'timer-form') {
         setView('timers');
-      } else if (view === 'alarms' || view === 'timers') {
+      } else if (view === 'alarms' || view === 'timers' || view === 'notes') {
         setView('calendar');
+      } else if (view === 'note-form') {
+        setView('notes');
+        setSelectedNote(null);
       } else {
         CapacitorApp.exitApp();
       }
@@ -80,7 +86,7 @@ function App() {
     return () => {
       backHandler.then((handler: any) => handler.remove());
     };
-  }, [view, selectedEvent]);
+  }, [view, selectedEvent, selectedNote]);
 
   const handleDateSelect = useCallback((date: Date) => {
     setSelectedDate(date);
@@ -269,11 +275,32 @@ function App() {
         {view === 'timer-form' && (
           <TimerForm onClose={() => setView('timers')} />
         )}
+        {view === 'notes' && (
+          <NotesView 
+            onAddNote={() => {
+              setSelectedNote(null);
+              setView('note-form');
+            }}
+            onEditNote={(note) => {
+              setSelectedNote(note);
+              setView('note-form');
+            }}
+          />
+        )}
+        {view === 'note-form' && (
+          <NoteForm 
+            note={selectedNote} 
+            onClose={() => {
+              setView('notes');
+              setSelectedNote(null);
+            }} 
+          />
+        )}
       </main>
 
       {view === 'calendar' && <Fab onClick={handleAddEvent} />}
 
-      {['calendar', 'alarms', 'timers'].includes(view) && (
+      {['calendar', 'alarms', 'timers', 'notes'].includes(view) && (
         <ViewSelector
           currentView={view}
           currentViewMode={viewMode}

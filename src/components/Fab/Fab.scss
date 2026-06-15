@@ -7,21 +7,26 @@
   width: 56px;
   height: 56px;
   border-radius: $radius-full;
-  background-color: $color-accent;
-  color: white;
+  background: linear-gradient(135deg, $color-accent, $color-accent-light);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: $shadow-lg;
-  transition: transform $transition-fast, background-color $transition-fast;
+  box-shadow: 0 4px 20px rgba($color-accent, 0.4), $shadow-glow;
   z-index: 50;
+  transition: all $transition-fast;
 
   &:hover {
-    background-color: $color-accent-light;
-    transform: scale(1.05);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 24px rgba($color-accent, 0.5), $shadow-glow;
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(1px) scale(0.95);
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
   }
 }

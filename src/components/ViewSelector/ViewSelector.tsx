@@ -5,6 +5,7 @@ import clockIcon from '../../assets/icons/clock.svg?raw';
 import yearIcon from '../../assets/icons/year.svg?raw';
 import monthIcon from '../../assets/icons/month.svg?raw';
 import weekIcon from '../../assets/icons/week.svg?raw';
+import notesIcon from '../../assets/icons/notes.svg?raw';
 import './ViewSelector.scss';
 
 interface ViewSelectorProps {
@@ -38,6 +39,7 @@ export default function ViewSelector({ currentView, currentViewMode, onNavigate 
 
   const isCalendarActive = currentView === 'calendar';
   const isClockActive = currentView === 'alarms' || currentView === 'timers';
+  const isNotesActive = currentView === 'notes';
 
   return (
     <nav className="view-selector" ref={containerRef}>
@@ -146,6 +148,24 @@ export default function ViewSelector({ currentView, currentViewMode, onNavigate 
               dangerouslySetInnerHTML={{ __html: clockIcon }} 
             />
             <span className="view-selector__label">Reloj</span>
+          </button>
+        </div>
+
+        {/* TAB NOTAS */}
+        <div className="view-selector__tab-wrapper">
+          <button
+            className={`view-selector__btn ${isNotesActive ? 'view-selector__btn--active' : ''}`}
+            onClick={() => {
+              onNavigate('notes');
+              setActiveSubmenu(null);
+            }}
+            data-testid="view-selector-notes-tab"
+          >
+            <span 
+              className="view-selector__icon" 
+              dangerouslySetInnerHTML={{ __html: notesIcon }} 
+            />
+            <span className="view-selector__label">Notas</span>
           </button>
         </div>
 

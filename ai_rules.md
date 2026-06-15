@@ -61,6 +61,12 @@ src/
 2. **Interfaces vs Types**: Usar `interface` para objetos y props de componentes. Usar `type` para uniones, intersecciones y tipos utilitarios.
 3. **Enums**: Evitar `enum`. Usar `as const` con objetos literales.
 4. **Null checks**: Preferir optional chaining (`?.`) y nullish coalescing (`??`).
+5. **Tipado modular**: No agrupar todos los tipos en un único archivo genérico. Organizar las interfaces y tipos de forma granular en submódulos temáticos dentro de `src/types/` (ej: `calendar.ts`, `schedules.ts`, `notes.ts`, `common.ts`) y re-exportarlos de manera centralizada en `src/types/index.ts` y `src/types/types.ts`.
+
+### Recursos y Assets (SVGs)
+
+1. **Catálogo de iconos**: No escribir código SVG inline en los archivos TSX/JSX de los componentes. Todos los iconos SVG deben extraerse como archivos individuales `.svg` dentro de la carpeta `src/assets/icons/`.
+2. **Importación de SVGs**: Para renderizar los iconos en React de forma limpia y mantener el estilo CSS/SASS, importarlos usando el modificador `?raw` de Vite (ej: `import trashIcon from '../../assets/icons/trash.svg?raw';`) y renderizarlos mediante `dangerouslySetInnerHTML={{ __html: trashIcon }}` en un elemento contenedor.
 
 ### Estilos (SCSS)
 

@@ -161,6 +161,11 @@
     align-items: center;
     justify-content: center;
 
+    .icon-svg {
+      width: 18px;
+      height: 18px;
+    }
+
     &--icon {
       width: 36px;
       height: 36px;
@@ -195,6 +200,16 @@
 
       &:active {
         background: $color-surface-hover;
+      }
+    }
+
+    &--stop {
+      background: rgba(#ef4444, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(#ef4444, 0.3);
+
+      &:active {
+        background: rgba(#ef4444, 0.25);
       }
     }
   }
@@ -257,7 +272,9 @@
     justify-content: center;
     transition: all $transition-fast;
 
-    svg {
+    .icon-svg {
+      width: 18px;
+      height: 18px;
       margin-left: 2px; // center the play triangle visually
     }
 
@@ -277,6 +294,11 @@
     padding: $spacing-xs;
     border-radius: $radius-sm;
     transition: all $transition-fast;
+
+    .icon-svg {
+      width: 18px;
+      height: 18px;
+    }
 
     &:active {
       color: #ff4d4d;
