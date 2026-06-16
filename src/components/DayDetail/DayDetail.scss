@@ -4,41 +4,49 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  animation: slide-in-right 0.3s ease-out;
+  animation: slide-right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
   &__header {
     display: flex;
     align-items: center;
     gap: $spacing-md;
-    padding: $spacing-lg 0;
+    padding: $spacing-sm 0;
     margin-bottom: $spacing-xl;
+    margin-top: $spacing-xs;
   }
 
   &__back-btn {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: $radius-full;
-    background: $color-surface;
-    font-size: $font-size-xl;
-    color: $color-text-primary;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #ffffff;
     transition: all $transition-fast;
 
     &:hover {
-      background: $color-surface-hover;
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(-2px);
+    }
+    
+    &:active {
+      transform: translateX(0);
     }
   }
 
   &__date {
+    font-family: $font-display;
     font-size: $font-size-md;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: capitalize;
-    color: $color-text-primary;
+    color: #ffffff;
+    letter-spacing: -0.01em;
 
     &--weekend {
-      color: #4facfe;
+      color: rgba($color-accent-light, 0.85);
     }
   }
 
@@ -49,26 +57,28 @@
   &__event-list {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
+    gap: $spacing-sm;
   }
 
   &__event-card {
     display: flex;
     align-items: center;
-    gap: $spacing-lg;
-    background: $color-bg-card;
+    gap: $spacing-md;
+    background: rgba(22, 24, 37, 0.45);
     padding: $spacing-md $spacing-lg;
     border-radius: $radius-lg;
-    border: 1px solid $color-border;
-    transition: transform $transition-fast;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all $transition-base;
 
     &:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      background: rgba(22, 24, 37, 0.6);
       transform: translateX(4px);
-      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: $shadow-sm;
     }
 
     &--completed {
-      opacity: 0.6;
+      opacity: 0.5;
       
       .day-detail__event-title {
         text-decoration: line-through;
@@ -80,7 +90,7 @@
       }
 
       .day-detail__event-indicator {
-        opacity: 0.5;
+        opacity: 0.4;
       }
     }
   }
@@ -94,16 +104,16 @@
       appearance: none;
       width: 22px;
       height: 22px;
-      border: 2px solid $color-border;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
       border-radius: 6px;
       cursor: pointer;
       position: relative;
       transition: all $transition-fast;
-      background: rgba($color-bg-secondary, 0.5);
+      background: rgba(255, 255, 255, 0.03);
 
       &:checked {
-        background: $color-accent;
-        border-color: $color-accent;
+        background: $color-success;
+        border-color: $color-success;
 
         &::after {
           content: '✓';
@@ -112,13 +122,14 @@
           left: 50%;
           transform: translate(-50%, -50%);
           color: white;
-          font-size: 14px;
+          font-size: 13px;
           font-weight: bold;
         }
       }
 
       &:hover {
         border-color: $color-accent-light;
+        background: rgba(255, 255, 255, 0.05);
       }
     }
   }
@@ -131,13 +142,14 @@
   }
 
   &__time-start {
-    font-size: $font-size-sm;
-    font-weight: 600;
-    color: $color-text-primary;
+    font-family: $font-display;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
   }
 
   &__time-end {
-    font-size: $font-size-xs;
+    font-size: 0.75rem;
     color: $color-text-muted;
   }
 
@@ -164,12 +176,12 @@
   &__event-title {
     font-size: $font-size-base;
     font-weight: 600;
-    color: $color-text-primary;
+    color: #ffffff;
     line-height: 1.4;
   }
 
   &__event-description {
-    font-size: $font-size-xs;
+    font-size: 0.75rem;
     color: $color-text-muted;
     line-height: 1.5;
     display: -webkit-box;
@@ -183,16 +195,5 @@
     text-align: center;
     color: $color-text-muted;
     font-style: italic;
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    transform: translateX(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
   }
 }

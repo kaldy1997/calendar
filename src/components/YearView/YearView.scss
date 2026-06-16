@@ -4,6 +4,15 @@
   flex: 1;
   overflow-y: auto;
   padding: $spacing-md 0;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+  }
 
   &__grid {
     display: grid;
@@ -13,11 +22,11 @@
   }
 
   &--animate-left {
-    animation: slide-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slide-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   &--animate-right {
-    animation: slide-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slide-right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -32,25 +41,30 @@
   }
 
   &__title {
-    font-size: 0.75rem;
+    font-family: $font-display;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: capitalize;
-    color: $color-text-primary;
+    color: #ffffff;
     margin-bottom: $spacing-xs;
     text-align: center;
+    letter-spacing: -0.01em;
   }
 
   &__weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     margin-bottom: 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
   }
 
   &__weekday {
+    font-family: $font-display;
     font-size: 0.5rem;
     font-weight: 700;
     color: $color-text-muted;
     text-align: center;
+    text-transform: uppercase;
   }
 
   &__days {
@@ -60,6 +74,7 @@
   }
 
   &__day {
+    font-family: $font-display;
     font-size: 0.55rem;
     font-weight: 500;
     color: $color-text-secondary;
@@ -70,12 +85,7 @@
     justify-content: center;
 
     &--weekend {
-      color: #4facfe;
+      color: rgba($color-accent-light, 0.7);
     }
   }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }

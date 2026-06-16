@@ -6,11 +6,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: $color-bg-primary;
+  background: radial-gradient(circle at top center, #141522 0%, #090a0f 70%, #050608 100%);
   z-index: 100;
   display: flex;
   flex-direction: column;
-  animation: slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   max-width: 430px;
   margin: 0 auto;
 
@@ -18,19 +18,20 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-lg $spacing-xl;
-    border-bottom: 1px solid $color-border;
-    background: rgba($color-bg-secondary, 0.8);
-    backdrop-filter: blur(12px);
+    padding: $spacing-md $spacing-lg;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(14, 16, 26, 0.85);
+    backdrop-filter: blur(16px);
     position: sticky;
     top: 0;
     z-index: 10;
   }
 
   &__title {
+    font-family: $font-display;
     font-size: $font-size-md;
     font-weight: 700;
-    color: $color-text-primary;
+    color: #ffffff;
   }
 
   &__cancel {
@@ -39,16 +40,22 @@
     align-items: center;
     justify-content: center;
     padding: $spacing-xs;
+    border-radius: 8px;
     transition: all $transition-fast;
 
     .icon-svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
 
     &:hover {
       color: $color-text-primary;
-      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.05);
+      transform: scale(1.05);
+    }
+    
+    &:active {
+      transform: scale(0.95);
     }
   }
 
@@ -58,11 +65,12 @@
     align-items: center;
     justify-content: center;
     padding: $spacing-xs;
+    border-radius: 8px;
     transition: all $transition-fast;
 
     .icon-svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
     }
 
     &:disabled {
@@ -71,15 +79,20 @@
     }
 
     &:not(:disabled):hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
       color: $color-accent;
+      background: rgba($color-accent, 0.08);
+    }
+    
+    &:not(:disabled):active {
+      transform: scale(0.95);
     }
   }
 
   &__content {
     flex: 1;
     overflow-y: auto;
-    padding: $spacing-xl;
+    padding: $spacing-lg;
     display: flex;
     flex-direction: column;
     gap: $spacing-xl;
@@ -104,61 +117,69 @@
   }
 
   &__label {
-    font-size: $font-size-xs;
-    font-weight: 600;
+    font-family: $font-display;
+    font-size: 0.75rem;
+    font-weight: 700;
     color: $color-text-muted;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding-left: 4px;
+    letter-spacing: 0.08em;
+    padding-left: 2px;
   }
 
   &__input-title {
     background: transparent;
     border: none;
-    border-bottom: 2px solid $color-border;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.06);
     padding: $spacing-sm 0;
+    font-family: $font-display;
     font-size: $font-size-xl;
     font-weight: 700;
-    color: $color-text-primary;
+    color: #ffffff;
     transition: border-color $transition-fast;
-    width: 100%;
-
-    &::placeholder {
-      color: rgba($color-text-muted, 0.3);
-    }
-
-    &--error {
-      border-color: #ff4d4d;
-      box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.1);
-    }
-  }
-
-  &__error-msg {
-    color: #ff4d4d;
-    font-size: $font-size-xs;
-    margin-top: $spacing-xs;
-    font-weight: 500;
-  }
-
-  &__input, &__select, &__textarea {
-    background: $color-bg-card;
-    border: 1px solid $color-border;
-    border-radius: $radius-md;
-    padding: $spacing-md;
-    font-size: $font-size-sm;
-    color: $color-text-primary;
-    transition: all $transition-fast;
     width: 100%;
 
     &:focus {
       outline: none;
-      border-color: $color-accent-light;
-      box-shadow: 0 0 0 3px rgba($color-accent-light, 0.1);
+      border-bottom-color: rgba($color-accent-light, 0.8);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.15);
     }
 
     &--error {
-      border-color: #ff4d4d;
-      box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.1);
+      border-color: #ff5a79;
+      box-shadow: 0 0 0 2px rgba(255, 90, 121, 0.1);
+    }
+  }
+
+  &__error-msg {
+    color: #ff5a79;
+    font-size: $font-size-xs;
+    margin-top: $spacing-xs;
+    font-weight: 600;
+  }
+
+  &__input, &__select, &__textarea {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    font-size: $font-size-sm;
+    color: #ffffff;
+    transition: all $transition-base;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      border-color: rgba($color-accent-light, 0.5);
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 12px rgba($color-accent, 0.1);
+    }
+
+    &--error {
+      border-color: #ff5a79;
+      box-shadow: 0 0 0 2px rgba(255, 90, 121, 0.1);
     }
   }
 
@@ -175,32 +196,34 @@
   }
 
   &__alarm-pill {
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $radius-xl;
-    background: $color-bg-card;
-    border: 1px solid $color-border;
+    padding: 8px $spacing-sm;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     color: $color-text-secondary;
-    font-size: 0.65rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     transition: all $transition-fast;
     white-space: nowrap;
     text-align: center;
+    cursor: pointer;
 
     &:hover {
-      border-color: $color-text-muted;
+      border-color: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     &--active {
-      background: rgba($color-accent-light, 0.15);
-      border-color: $color-accent-light;
+      background: rgba($color-accent-light, 0.12);
+      border-color: rgba($color-accent-light, 0.3);
       color: $color-accent-light;
-      font-weight: 600;
+      font-weight: 700;
     }
   }
 
   &__select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 16px center;
     padding-right: 40px !important; // Extra separation from right
@@ -220,23 +243,14 @@
     cursor: pointer;
     user-select: none;
     font-size: $font-size-sm;
-    color: $color-text-primary;
-    font-weight: 500;
+    color: $color-text-secondary;
+    font-weight: 600;
   }
 
   &__toggle-checkbox {
-    width: 20px;
-    height: 20px;
-    accent-color: $color-accent-light;
+    width: 18px;
+    height: 18px;
+    accent-color: $color-accent;
     cursor: pointer;
-  }
-}
-
-@keyframes slide-up {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
   }
 }

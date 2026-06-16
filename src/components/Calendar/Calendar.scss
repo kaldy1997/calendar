@@ -11,24 +11,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: $spacing-xl;
+    margin-bottom: $spacing-md;
     padding: $spacing-sm 0;
-    margin-top: $spacing-sm;
+    margin-top: $spacing-xs;
   }
 
   &__month-year {
-    font-size: $font-size-lg;
+    font-family: $font-display;
+    font-size: $font-size-xl;
     font-weight: 700;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     cursor: pointer;
-    transition: all $transition-fast;
+    transition: all $transition-base;
     user-select: none;
     text-transform: capitalize;
-    color: $color-text-primary;
+    color: #ffffff;
+    padding: $spacing-xs $spacing-md;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 
     &:hover {
-      color: $color-accent-light;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba($color-accent-light, 0.2);
       transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(1px);
     }
   }
 
@@ -53,6 +63,7 @@
     width: 100%;
     flex: 1;
     will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   &__pane {

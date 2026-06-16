@@ -5,20 +5,21 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  margin: 0 (-$spacing-xl); // Compensate app content padding
+  margin: 0 (-$spacing-lg); // Compensate app content padding
 
   &__header {
     display: flex;
-    border-bottom: 1px solid $color-border;
-    background: rgba($color-bg-secondary, 0.5);
-    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(22, 24, 37, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     z-index: 10;
   }
 
   &__corner {
     width: 45px;
     flex-shrink: 0;
-    border-right: 1px solid $color-border;
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
   }
 
   &__days-header {
@@ -36,12 +37,12 @@
     transition: background $transition-fast;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.03);
     }
 
     &--today {
       .week-view__day-number {
-        background: $color-today;
+        background: linear-gradient(135deg, $color-today 0%, $color-accent-light 100%);
         color: white;
         border-radius: 50%;
         width: 24px;
@@ -49,25 +50,30 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 4px rgba($color-today, 0.4);
+        box-shadow: 0 2px 6px rgba($color-today, 0.3);
+        font-weight: 700;
       }
     }
   }
 
   &__day-name {
+    font-family: $font-display;
     font-size: 0.65rem;
     font-weight: 700;
     color: $color-text-muted;
     text-transform: uppercase;
     margin-bottom: 2px;
+    letter-spacing: 0.05em;
   }
 
   &__day-number {
-    font-size: 0.95rem;
+    font-family: $font-display;
+    font-size: 0.9rem;
     font-weight: 600;
+    color: $color-text-secondary;
 
     &--weekend {
-      color: #4facfe;
+      color: rgba($color-accent-light, 0.7);
     }
   }
 
@@ -82,7 +88,7 @@
       width: 4px;
     }
     &::-webkit-scrollbar-thumb {
-      background: rgba($color-border, 0.5);
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 2px;
     }
   }
@@ -96,19 +102,20 @@
   &__hours {
     width: 45px;
     flex-shrink: 0;
-    border-right: 1px solid $color-border;
-    background: rgba($color-bg-secondary, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(22, 24, 37, 0.2);
   }
 
   &__hour-label {
     height: 60px;
-    font-size: 0.6rem;
-    font-weight: 500;
+    font-family: $font-display;
+    font-size: 0.65rem;
+    font-weight: 600;
     color: $color-text-muted;
     text-align: right;
     padding-right: 8px;
     padding-top: 4px;
-    border-bottom: 1px solid rgba($color-border, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
     box-sizing: border-box;
   }
 
@@ -119,7 +126,7 @@
 
   &__hour-row {
     height: 60px;
-    border-bottom: 1px solid rgba($color-border, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
     width: 100%;
     box-sizing: border-box;
   }
@@ -136,7 +143,7 @@
 
   &__day-column {
     position: relative;
-    border-right: 1px solid rgba($color-border, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.02);
 
     &:last-child {
       border-right: none;
@@ -148,24 +155,27 @@
     left: 2px;
     right: 2px;
     padding: 4px;
-    border-radius: 4px;
-    color: white;
+    border-radius: 6px;
+    color: #ffffff;
     font-size: 0.65rem;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     z-index: 1;
-    transition: transform $transition-fast, box-shadow $transition-fast;
-    border-left: 3px solid rgba(0, 0, 0, 0.2);
+    background: rgba($color-accent, 0.15) !important;
+    border-left: 2px solid $color-accent;
+    transition: all $transition-fast;
 
     &:hover {
+      background: rgba($color-accent, 0.25) !important;
       transform: scale(1.02);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       z-index: 2;
     }
 
     &--completed {
-      opacity: 0.6;
+      opacity: 0.65;
+      background: rgba($color-success, 0.12) !important;
+      border-left: 2px solid $color-success !important;
+      
       .week-view__event-title {
         text-decoration: line-through;
       }
@@ -187,15 +197,10 @@
   }
 
   &--animate-left {
-    animation: slide-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slide-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   &--animate-right {
-    animation: slide-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slide-right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }

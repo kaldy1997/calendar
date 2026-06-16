@@ -4,8 +4,6 @@
 // Global Reset & Base Styles
 // ============================================
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 *,
 *::before,
 *::after {
@@ -22,7 +20,7 @@ html {
 
 body {
   font-family: $font-family;
-  background-color: $color-bg-primary;
+  background: radial-gradient(circle at top center, #141522 0%, #090a0f 70%, #050608 100%);
   color: $color-text-primary;
   line-height: 1.5;
   min-height: 100dvh;
@@ -60,8 +58,183 @@ img {
 }
 
 // ============================================
-// Utility Classes
+// Generic Utility Classes
 // ============================================
+
+// Typography
+.font-display {
+  font-family: $font-display;
+}
+
+.font-body {
+  font-family: $font-body;
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, $color-accent-light 0%, $color-today 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-muted {
+  color: $color-text-secondary;
+}
+
+.text-dimmed {
+  color: $color-text-muted;
+}
+
+// Layout Flex & Grid
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.gap-xs { gap: $spacing-xs; }
+.gap-sm { gap: $spacing-sm; }
+.gap-md { gap: $spacing-md; }
+.gap-lg { gap: $spacing-lg; }
+
+// Glassmorphism Panels & Cards
+.glass-panel {
+  background: $color-bg-card;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+}
+
+.glass-card {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-surface-hover;
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+    box-shadow: $shadow-md, $shadow-glow;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Pill Buttons
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: $radius-full;
+  font-family: $font-body;
+  font-weight: 600;
+  font-size: $font-size-sm;
+  transition: all $transition-fast;
+  user-select: none;
+  gap: $spacing-sm;
+
+  &--primary {
+    background: linear-gradient(135deg, $color-accent 0%, $color-accent-light 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba($color-accent, 0.3);
+    
+    &:hover {
+      box-shadow: 0 6px 20px rgba($color-accent, 0.45), 0 0 10px rgba($color-accent-light, 0.2);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba($color-accent, 0.2);
+    }
+  }
+
+  &--secondary {
+    background: $color-surface;
+    color: $color-text-primary;
+    border: 1px solid $color-border;
+    
+    &:hover {
+      background: $color-surface-hover;
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  &--danger {
+    background: rgba($color-warning, 0.12);
+    color: $color-warning;
+    border: 1px solid rgba($color-warning, 0.2);
+    
+    &:hover {
+      background: rgba($color-warning, 0.22);
+      border-color: rgba($color-warning, 0.35);
+      transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+// Glass Form Inputs
+.input-glass {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: 12px 16px;
+  font-family: $font-body;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  transition: all $transition-base;
+  outline: none;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba($color-accent-light, 0.6);
+    box-shadow: 0 0 15px rgba($color-accent, 0.15);
+  }
+}
 
 .visually-hidden {
   position: absolute;
@@ -80,8 +253,8 @@ img {
 // ============================================
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -89,27 +262,43 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba($color-text-muted, 0.3);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: $radius-full;
+  border: 2px solid transparent;
+  background-clip: padding-box;
   
   &:hover {
-    background: rgba($color-accent, 0.5);
+    background: rgba($color-accent-light, 0.4);
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
 }
 
 // Firefox support
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba($color-text-muted, 0.3) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
 }
+
+// Keyframe Animations
 @keyframes slide-left {
-  from { transform: translateX(30px); opacity: 0; }
+  from { transform: translateX(20px); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes slide-right {
-  from { transform: translateX(-30px); opacity: 0; }
+  from { transform: translateX(-20px); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 // ============================================
@@ -129,6 +318,8 @@ img {
     display: block;
     fill: none;
     stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2px;
   }
 }
-

@@ -8,34 +8,23 @@
   margin: 0 auto;
   width: 100%;
   position: relative;
-  background-color: $color-bg-primary;
-  padding-bottom: 80px; /* Space for ViewSelector */
+  background: transparent;
+  padding-bottom: 90px; /* Space for floating ViewSelector */
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.6);
+  border-left: 1px solid rgba(255, 255, 255, 0.03);
+  border-right: 1px solid rgba(255, 255, 255, 0.03);
 
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: $spacing-lg $spacing-xl;
-    background: rgba($color-bg-primary, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid $color-border;
-  }
-
-  &__title {
-    font-size: $font-size-lg;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-
-    span {
-      color: $color-accent-light;
-    }
+  @media (max-width: 450px) {
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
   }
 
   &__content {
     flex: 1;
-    padding: $spacing-lg $spacing-xl;
+    padding: $spacing-md $spacing-lg;
     display: flex;
     flex-direction: column;
+    animation: fade-in 0.4s ease-out;
   }
 }

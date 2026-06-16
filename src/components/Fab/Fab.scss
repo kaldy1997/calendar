@@ -2,7 +2,7 @@
 
 .fab {
   position: fixed;
-  bottom: calc($spacing-2xl + 60px); /* 60px para salvar el ViewSelector si lo hay */
+  bottom: calc($spacing-2xl + 76px); /* Saved from overlapping the floating ViewSelector */
   right: $spacing-xl;
   width: 56px;
   height: 56px;
@@ -12,13 +12,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba($color-accent, 0.4), $shadow-glow;
+  box-shadow: 0 4px 20px rgba($color-accent, 0.45), 0 0 25px rgba($color-accent-light, 0.2);
   z-index: 50;
   transition: all $transition-fast;
 
   &:hover {
     transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 24px rgba($color-accent, 0.5), $shadow-glow;
+    box-shadow: 0 6px 24px rgba($color-accent, 0.55), 0 0 30px rgba($color-accent-light, 0.3);
   }
 
   &:active {

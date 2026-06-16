@@ -2,22 +2,25 @@
 
 .view-selector {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 398px; /* 430px - 32px margin */
   padding: 0;
   z-index: 60;
-  background: rgba($color-bg-card, 0.85);
-  border-top: 1px solid $color-border;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  background: rgba(22, 24, 37, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 30px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(99, 102, 241, 0.08);
 
   &__container {
     display: flex;
     width: 100%;
-    max-width: none;
-    padding: $spacing-xs 0 env(safe-area-inset-bottom, $spacing-xs);
+    padding: $spacing-xs 8px;
+    align-items: center;
   }
 
   &__tab-wrapper {
@@ -33,20 +36,29 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: $spacing-xs;
-    padding: $spacing-sm 0;
+    gap: 4px;
+    padding: 10px 0;
     color: $color-text-secondary;
-    transition: all $transition-fast;
+    border-radius: 20px;
+    transition: all $transition-base;
     background: transparent;
     border: none;
     cursor: pointer;
 
+    &:hover {
+      color: $color-text-primary;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
     &--active {
-      color: $color-accent;
-      text-shadow: 0 0 10px rgba($color-accent, 0.2);
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba($color-accent, 0.25) 0%, rgba($color-accent-light, 0.15) 100%);
+      border: 1px solid rgba($color-accent-light, 0.15);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
       
       .view-selector__icon {
-        transform: translateY(-2px);
+        transform: translateY(-1px) scale(1.05);
+        color: $color-accent-light;
       }
     }
   }
@@ -55,9 +67,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-    transition: transform $transition-fast;
+    width: 22px;
+    height: 22px;
+    transition: transform $transition-fast, color $transition-fast;
+    color: inherit;
 
     svg {
       width: 100%;
@@ -66,29 +79,29 @@
   }
 
   &__label {
-    font-size: $font-size-xs;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    letter-spacing: 0.2px;
   }
 
   /* Submenus styling */
   &__submenu {
     position: absolute;
-    bottom: calc(100% + 8px);
-    background: rgba($color-bg-secondary, 0.95);
-    border: 1px solid $color-border;
-    border-radius: $radius-md;
-    box-shadow: $shadow-lg, 0 0 15px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    padding: $spacing-sm;
+    bottom: calc(100% + 14px);
+    background: rgba(14, 16, 26, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: $spacing-xs;
-    min-width: 130px;
+    gap: 4px;
+    min-width: 150px;
     z-index: 100;
-    animation: submenu-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: submenu-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
     &--calendar {
       left: 50%;
@@ -99,32 +112,45 @@
       left: 50%;
       transform: translateX(-50%);
     }
+    
+    // Add small triangle indicator
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: rgba(14, 16, 26, 0.9) transparent transparent transparent;
+    }
   }
 
   &__submenu-item {
     display: flex;
     align-items: center;
     gap: $spacing-sm;
-    padding: $spacing-sm $spacing-md;
+    padding: 8px 14px;
     background: transparent;
     border: none;
-    border-radius: $radius-sm;
-    color: $color-text-primary;
-    font-size: $font-size-sm;
-    font-weight: 500;
+    border-radius: 12px;
+    color: $color-text-secondary;
+    font-size: 0.85rem;
+    font-weight: 600;
     text-align: left;
     cursor: pointer;
     transition: all $transition-fast;
 
     &:hover {
-      background: $color-surface-hover;
-      color: $color-accent-light;
+      background: rgba(255, 255, 255, 0.05);
+      color: $color-text-primary;
     }
 
     &--active {
-      background: rgba($color-accent, 0.15);
+      background: linear-gradient(135deg, rgba($color-accent, 0.2) 0%, rgba($color-accent-light, 0.1) 100%);
+      border: 1px solid rgba($color-accent-light, 0.1);
       color: $color-accent-light;
-      font-weight: 600;
+      font-weight: 700;
     }
   }
 
@@ -132,8 +158,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 
     svg {
       width: 100%;
@@ -145,7 +171,7 @@
 @keyframes submenu-fade-in {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(8px);
+    transform: translateX(-50%) translateY(12px);
   }
   to {
     opacity: 1;

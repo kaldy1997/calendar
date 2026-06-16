@@ -4,52 +4,54 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin-left: -$spacing-xl;
-  margin-right: -$spacing-xl;
-  width: calc(100% + #{$spacing-xl} * 2);
-  background: $color-bg-primary;
+  margin-left: -$spacing-lg;
+  margin-right: -$spacing-lg;
+  width: calc(100% + #{$spacing-lg} * 2);
+  background: transparent;
   color: $color-text-primary;
-  padding-bottom: 80px; // account for bottom nav
-  position: relative; // contain FAB if needed
+  padding-bottom: 90px; // account for bottom nav
+  position: relative;
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: $spacing-xl;
+    margin-bottom: $spacing-lg;
     padding: $spacing-sm 0;
-    margin-top: $spacing-sm;
+    margin-top: $spacing-xs;
   }
 
   &__title {
-    font-size: $font-size-lg;
+    font-family: $font-display;
+    font-size: $font-size-xl;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    color: $color-text-primary;
+    letter-spacing: -0.02em;
+    color: #ffffff;
   }
 
   &__content {
     flex: 1;
     overflow-y: auto;
-    padding: $spacing-xl 0;
-    padding-bottom: 100px; // extra padding to scroll past FAB
+    padding: $spacing-md 0;
+    padding-bottom: 120px; // extra padding to scroll past FAB
     display: flex;
     flex-direction: column;
-    gap: $spacing-2xl;
+    gap: $spacing-xl;
   }
 
   &__section {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
+    gap: $spacing-sm;
   }
 
   &__section-title {
-    font-size: $font-size-sm;
+    font-family: $font-display;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     color: $color-text-muted;
-    letter-spacing: 1px;
+    letter-spacing: 0.08em;
     padding-left: $spacing-xl;
   }
 
@@ -58,7 +60,7 @@
     background: transparent;
     border: none;
     text-align: center;
-    color: rgba($color-text-secondary, 0.85);
+    color: $color-text-secondary;
     font-size: $font-size-sm;
     font-style: italic;
   }
@@ -66,31 +68,37 @@
   &__list {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
+    gap: $spacing-sm;
+    padding: 0 $spacing-lg;
   }
 
   &__item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-lg $spacing-xl;
-    background: $color-bg-card;
-    border-top: 1px solid $color-border;
-    border-bottom: 1px solid $color-border;
-    border-radius: 0;
-    box-shadow: none;
+    padding: $spacing-md $spacing-lg;
+    background: rgba(22, 24, 37, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
     transition: all $transition-base;
     gap: $spacing-md;
 
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.09);
+      background: rgba(22, 24, 37, 0.6);
+      transform: translateY(-1px);
+      box-shadow: $shadow-md;
+    }
+
     &:active {
-      background: rgba($color-surface-hover, 0.5);
+      transform: translateY(1px);
     }
 
     &--inactive {
-      opacity: 0.6;
-      border-top: 1px solid transparent;
-      border-bottom: 1px solid $color-border;
-      background: rgba($color-bg-card, 0.4);
+      opacity: 0.5;
+      background: rgba(22, 24, 37, 0.25);
+      border-color: rgba(255, 255, 255, 0.02);
       
       .alarms-view__time {
         color: $color-text-muted;
@@ -98,44 +106,48 @@
     }
 
     &--event {
-      border-left: 4px solid $color-today !important;
+      border-left: 3px solid $color-today !important;
     }
   }
 
   &__time-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     align-items: flex-start;
   }
 
   &__time {
+    font-family: $font-display;
     font-size: $font-size-xl;
-    font-weight: 800;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
-    color: $color-text-primary;
+    color: #ffffff;
     transition: color $transition-fast;
+    letter-spacing: -0.01em;
   }
 
   &__tag {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
     padding: 2px 6px;
-    background: rgba($color-today, 0.15);
+    background: rgba($color-today, 0.08);
     color: $color-today;
-    border-radius: 4px;
+    border-radius: 6px;
+    border: 1px solid rgba($color-today, 0.15);
     letter-spacing: 0.5px;
   }
 
   &__repeat-tag {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
     padding: 2px 6px;
-    background: rgba($color-accent, 0.15);
+    background: rgba($color-accent, 0.08);
     color: $color-accent-light;
-    border-radius: 4px;
+    border-radius: 6px;
+    border: 1px solid rgba($color-accent, 0.15);
     letter-spacing: 0.5px;
   }
 
@@ -147,21 +159,21 @@
   }
 
   &__item-title {
-    font-size: $font-size-base;
+    font-size: $font-size-sm;
     font-weight: 700;
-    color: $color-text-primary;
+    color: #ffffff;
     word-break: break-word;
   }
 
   &__item-subtitle {
-    font-size: $font-size-xs;
+    font-size: 0.75rem;
     color: $color-text-secondary;
   }
 
   &__actions {
     display: flex;
     align-items: center;
-    gap: $spacing-lg;
+    gap: $spacing-md;
   }
 
   /* Custom toggle switch styling */
@@ -185,9 +197,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: $color-bg-secondary;
-    border: 1px solid $color-border;
-    transition: .3s;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 24px;
 
     &:before {
@@ -198,20 +210,20 @@
       left: 3px;
       bottom: 3px;
       background-color: $color-text-muted;
-      transition: .3s;
+      transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
       border-radius: 50%;
     }
   }
 
   input:checked + &__slider {
     background-color: rgba($color-accent, 0.2);
-    border-color: $color-accent;
+    border-color: rgba($color-accent, 0.4);
   }
 
   input:checked + &__slider:before {
     transform: translateX(20px);
     background-color: $color-accent-light;
-    box-shadow: 0 0 8px rgba($color-accent, 0.5);
+    box-shadow: 0 0 10px rgba($color-accent, 0.6);
   }
 
   &__delete-btn {
@@ -227,185 +239,13 @@
     transition: all $transition-fast;
 
     .icon-svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
-
-    &:active {
-      color: #ff4d4d;
-      background: rgba(#ff4d4d, 0.15);
-    }
-  }
-
-  /* Modal Form styling */
-  &__modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: $spacing-xl;
-  }
-
-  &__modal {
-    width: 100%;
-    max-width: 380px;
-    background: $color-bg-card;
-    border: 1px solid $color-border;
-    border-radius: $radius-xl;
-    padding: $spacing-xl;
-    box-shadow: $shadow-lg;
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-lg;
-    animation: zoom-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  &__modal-title {
-    font-size: $font-size-md;
-    font-weight: 800;
-    color: $color-text-primary;
-    margin-bottom: $spacing-xs;
-  }
-
-  &__field {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-xs;
-
-    &--row {
-      flex-direction: row;
-      align-items: center;
-      padding: $spacing-xs 0;
-    }
-  }
-
-  &__modal-label {
-    font-size: $font-size-xs;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: $color-text-muted;
-    letter-spacing: 0.5px;
-    padding-left: 2px;
-  }
-
-  &__input-time {
-    background: $color-bg-primary;
-    border: 1px solid $color-border;
-    border-radius: $radius-md;
-    padding: $spacing-md;
-    font-size: $font-size-xl;
-    font-weight: 800;
-    color: $color-text-primary;
-    text-align: center;
-    width: 100%;
-
-    &:focus {
-      outline: none;
-      border-color: $color-accent;
-      box-shadow: 0 0 0 3px rgba($color-accent, 0.15);
-    }
-  }
-
-  &__select {
-    background: $color-bg-primary;
-    border: 1px solid $color-border;
-    border-radius: $radius-md;
-    padding: $spacing-md;
-    font-size: $font-size-sm;
-    color: $color-text-primary;
-    width: 100%;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239d9db5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    padding-right: 40px !important;
-
-    &:focus {
-      outline: none;
-      border-color: $color-accent;
-      box-shadow: 0 0 0 3px rgba($color-accent, 0.15);
-    }
-  }
-
-  &__checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: $spacing-sm;
-    cursor: pointer;
-    font-size: $font-size-sm;
-    color: $color-text-secondary;
-    font-weight: 500;
-    user-select: none;
-  }
-
-  &__checkbox {
-    width: 18px;
-    height: 18px;
-    accent-color: $color-accent-light;
-    cursor: pointer;
-  }
-
-  &__modal-actions {
-    display: flex;
-    gap: $spacing-md;
-    margin-top: $spacing-sm;
-  }
-
-  &__btn-secondary {
-    flex: 1;
-    background: rgba($color-surface, 0.5);
-    border: 1px solid $color-border;
-    color: $color-text-primary;
-    padding: $spacing-md;
-    border-radius: $radius-md;
-    font-size: $font-size-sm;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all $transition-fast;
 
     &:hover {
-      background: $color-surface-hover;
+      color: #ff5a79;
+      background: rgba(#ff5a79, 0.08);
     }
-  }
-
-  &__btn-primary {
-    flex: 1;
-    background: linear-gradient(135deg, $color-accent 0%, $color-accent-light 100%);
-    border: none;
-    color: #fff;
-    padding: $spacing-md;
-    border-radius: $radius-md;
-    font-size: $font-size-sm;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba($color-accent, 0.2);
-    transition: all $transition-fast;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba($color-accent, 0.3);
-    }
-
-    &:active {
-      transform: translateY(1px);
-    }
-  }
-}
-
-@keyframes zoom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }

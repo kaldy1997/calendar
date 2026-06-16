@@ -1,140 +1,173 @@
+@use '../../styles/variables' as *;
+
 .event-detail-view {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--color-bg-primary);
+  background: radial-gradient(circle at top center, #141522 0%, #090a0f 70%, #050608 100%);
   z-index: 1100;
   display: flex;
   flex-direction: column;
-  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 430px;
+  margin: 0 auto;
 
   &__header {
-    padding: 16px 20px;
+    padding: $spacing-md $spacing-lg;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(14, 16, 26, 0.85);
+    backdrop-filter: blur(16px);
   }
 
   &__close {
     background: transparent;
     border: none;
-    color: white;
-    font-size: 2.5rem;
+    color: #ffffff;
+    font-size: 2rem;
     line-height: 1;
     cursor: pointer;
     padding: 0;
-    height: 40px;
-    width: 40px;
+    height: 38px;
+    width: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: -10px;
+    border-radius: 12px;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: $color-text-primary;
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
   }
 
   &__actions {
     display: flex;
-    gap: 12px;
+    gap: $spacing-sm;
   }
 
   &__btn {
     padding: 8px 16px;
-    border-radius: 20px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     cursor: pointer;
     border: none;
-    transition: all 0.2s ease;
+    transition: all $transition-fast;
 
     &--edit {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+      }
     }
 
     &--delete {
-      background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
+      background: rgba(#ff5a79, 0.1);
+      color: #ff5a79;
+      border: 1px solid rgba(#ff5a79, 0.15);
+
+      &:hover {
+        background: rgba(#ff5a79, 0.18);
+        transform: translateY(-1px);
+      }
     }
 
     &:active {
-      transform: scale(0.95);
-      opacity: 0.8;
+      transform: translateY(1px);
     }
   }
 
   &__content {
     flex: 1;
     overflow-y: auto;
-    padding: 24px 24px 40px;
+    padding: $spacing-xl $spacing-lg 40px;
   }
 
   &__category-pill {
     display: inline-block;
     padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.8rem;
+    border-radius: 20px;
+    font-family: $font-display;
+    font-size: 0.75rem;
     font-weight: 700;
     color: white;
-    margin-bottom: 16px;
+    margin-bottom: $spacing-md;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.08em;
   }
 
   &__title {
-    margin: 0 0 24px;
-    font-size: 1.8rem;
-    font-weight: 800;
-    line-height: 1.2;
-    color: white;
+    margin: 0 0 $spacing-lg;
+    font-family: $font-display;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #ffffff;
+    letter-spacing: -0.02em;
   }
 
   &__info-group {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 32px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.03);
+    gap: $spacing-md;
+    margin-bottom: $spacing-xl;
+    padding: $spacing-lg;
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
+    border-radius: $radius-lg;
   }
 
   &__info-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: $spacing-md;
   }
 
   &__icon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     width: 24px;
     text-align: center;
+    color: $color-text-secondary;
   }
 
   &__text {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    color: $color-text-primary;
     font-weight: 500;
   }
 
   &__section-title {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.5);
+    font-family: $font-display;
+    font-size: 0.75rem;
+    color: $color-text-muted;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 0 0 12px;
+    letter-spacing: 0.08em;
+    margin: 0 0 $spacing-sm;
+    font-weight: 700;
   }
 
   &__description {
-    margin-bottom: 32px;
+    margin-bottom: $spacing-xl;
   }
 
   &__description-text {
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 1.6;
-    color: rgba(255, 255, 255, 0.8);
+    color: $color-text-secondary;
     margin: 0;
     white-space: pre-wrap;
   }
@@ -146,16 +179,12 @@
   }
 
   &__alarm-tag {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     padding: 6px 12px;
     border-radius: 10px;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $color-text-secondary;
   }
-}
-
-@keyframes slide-up {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
 }

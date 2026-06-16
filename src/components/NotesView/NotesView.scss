@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: $spacing-lg $spacing-lg 80px;
-  background-color: $color-bg-primary;
+  padding: $spacing-md $spacing-md 90px;
+  background: transparent;
   overflow-y: auto;
   min-height: 100vh;
 
@@ -15,38 +15,43 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: $spacing-md;
+    margin-top: $spacing-xs;
   }
 
   &__title {
+    font-family: $font-display;
     font-size: $font-size-xl;
     font-weight: 700;
-    color: $color-text-primary;
-    background: linear-gradient(135deg, $color-text-primary, #c3b4fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffffff;
+    letter-spacing: -0.02em;
   }
 
   &__layout-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: $radius-md;
-    background: $color-surface;
-    border: 1px solid $color-border;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     color: $color-text-secondary;
     transition: all $transition-fast;
 
     &:hover {
-      background: $color-surface-hover;
+      background: rgba(255, 255, 255, 0.08);
       color: $color-accent-light;
       border-color: rgba($color-accent, 0.3);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(1px);
     }
 
     svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
   }
 
@@ -54,8 +59,8 @@
   &__search-filters {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
-    margin-bottom: $spacing-xl;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-lg;
   }
 
   &__search-wrapper {
@@ -63,16 +68,16 @@
     display: flex;
     align-items: center;
     width: 100%;
-    background: $color-surface;
-    border: 1px solid $color-border;
-    border-radius: $radius-md;
-    padding: 0 $spacing-md;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 0 14px;
     transition: all $transition-base;
 
     &:focus-within {
-      border-color: $color-accent;
-      box-shadow: 0 0 0 3px rgba($color-accent, 0.15);
-      background: rgba($color-bg-card, 0.3);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba($color-accent-light, 0.5);
+      box-shadow: 0 0 15px rgba($color-accent, 0.1);
     }
   }
 
@@ -90,11 +95,11 @@
 
   &__search-input {
     width: 100%;
-    height: 44px;
+    height: 42px;
     background: transparent;
     border: none;
-    color: $color-text-primary;
-    font-size: $font-size-base;
+    color: #ffffff;
+    font-size: $font-size-sm;
     font-family: inherit;
 
     &:focus {
@@ -110,24 +115,27 @@
     background: transparent;
     border: none;
     color: $color-text-muted;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    transition: all $transition-fast;
 
     &:hover {
-      color: $color-text-primary;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
     }
   }
 
   // Labels Filter Carousel
   &__labels-carousel {
     display: flex;
-    gap: $spacing-sm;
+    gap: 8px;
     overflow-x: auto;
-    padding-bottom: $spacing-xs;
+    padding-bottom: 4px;
     scrollbar-width: none; // Firefox
 
     &::-webkit-scrollbar {
@@ -137,27 +145,28 @@
 
   &__label-tab {
     white-space: nowrap;
-    padding: 6px $spacing-md;
-    background: $color-surface;
-    border: 1px solid $color-border;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 20px;
     color: $color-text-secondary;
-    font-size: $font-size-sm;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 600;
     transition: all $transition-fast;
     cursor: pointer;
 
     &:hover {
-      background: $color-surface-hover;
-      color: $color-text-primary;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      transform: translateY(-1px);
     }
 
     &.active {
-      background: rgba($color-accent, 0.15);
-      border-color: $color-accent;
-      color: $color-accent-light;
-      font-weight: 600;
-      box-shadow: 0 2px 12px rgba($color-accent, 0.15);
+      background: linear-gradient(135deg, rgba($color-accent, 0.25) 0%, rgba($color-accent-light, 0.15) 100%);
+      border-color: rgba($color-accent-light, 0.4);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba($color-accent, 0.15);
     }
   }
 
@@ -169,22 +178,23 @@
     justify-content: center;
     text-align: center;
     padding: $spacing-2xl $spacing-lg;
-    background: rgba($color-bg-card, 0.4);
-    border: 1px dashed $color-border;
+    background: rgba(22, 24, 37, 0.4);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
     border-radius: $radius-lg;
     margin-top: $spacing-lg;
   }
 
   &__empty-icon {
-    font-size: 48px;
+    font-size: 40px;
     margin-bottom: $spacing-md;
     opacity: 0.8;
   }
 
   &__empty-title {
-    font-size: $font-size-lg;
-    font-weight: 600;
-    color: $color-text-primary;
+    font-family: $font-display;
+    font-size: $font-size-md;
+    font-weight: 700;
+    color: #ffffff;
     margin-bottom: $spacing-xs;
   }
 
@@ -192,22 +202,26 @@
     font-size: $font-size-sm;
     color: $color-text-secondary;
     margin-bottom: $spacing-lg;
-    max-width: 280px;
+    max-width: 260px;
   }
 
   &__empty-btn {
-    padding: 10px $spacing-xl;
+    padding: 10px 24px;
     background: linear-gradient(135deg, $color-accent, $color-accent-light);
-    border-radius: $radius-md;
+    border-radius: 20px;
     color: #ffffff;
     font-weight: 600;
-    font-size: $font-size-base;
-    box-shadow: $shadow-glow;
+    font-size: $font-size-sm;
+    box-shadow: 0 4px 15px rgba($color-accent, 0.3);
     transition: all $transition-fast;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba($color-accent, 0.4);
+      box-shadow: 0 6px 20px rgba($color-accent, 0.45);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 
@@ -216,11 +230,11 @@
     margin-bottom: $spacing-xl;
 
     &.pinned {
-      animation: slide-right 0.3s ease;
+      animation: slide-right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     &.others {
-      animation: slide-left 0.3s ease;
+      animation: slide-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 
@@ -228,17 +242,17 @@
     display: flex;
     align-items: center;
     gap: $spacing-sm;
-    font-size: $font-size-sm;
+    font-family: $font-display;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     color: $color-text-muted;
-    letter-spacing: 1px;
-    margin-bottom: $spacing-md;
+    letter-spacing: 0.08em;
+    margin-bottom: $spacing-sm;
 
     span {
       display: inline-flex;
-      color: $color-today;
-      animation: pulse 2s infinite;
+      color: $color-accent-light;
 
       svg {
         width: 14px;
@@ -252,7 +266,7 @@
     &.grid {
       .notes-view__grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
         gap: $spacing-md;
       }
     }
@@ -275,13 +289,13 @@
         
         &__title {
           grid-area: title;
-          margin-bottom: $spacing-xs;
+          margin-bottom: 4px;
         }
 
         &__pin {
           grid-area: actions;
           position: static;
-          margin-right: 32px; // Make space for delete button
+          margin-right: 36px;
         }
 
         &__delete {
@@ -291,27 +305,25 @@
 
         &__body {
           grid-area: body;
-          margin-bottom: $spacing-xs;
+          margin-bottom: 6px;
         }
 
         &__labels {
           grid-area: labels;
-          margin-top: $spacing-xs;
+          margin-top: 4px;
         }
       }
     }
   }
-
-
 }
 
 // Note Card Styling
 .note-card {
   position: relative;
-  background: $color-bg-card;
-  border: 1px solid $color-border;
+  background: rgba(22, 24, 37, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: $radius-lg;
-  padding: $spacing-lg;
+  padding: $spacing-md;
   cursor: pointer;
   transition: all $transition-base;
   overflow: hidden;
@@ -321,12 +333,13 @@
 
   &:hover {
     transform: translateY(-2px);
-    border-color: rgba($color-text-muted, 0.2);
-    box-shadow: $shadow-md;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: $shadow-md, 0 4px 20px rgba(0, 0, 0, 0.3);
 
     .note-card__pin,
     .note-card__delete {
       opacity: 0.8;
+      transform: scale(1);
     }
   }
 
@@ -334,27 +347,31 @@
   &__pin {
     position: absolute;
     top: $spacing-sm;
-    right: 36px;
-    width: 28px;
-    height: 28px;
-    border-radius: $radius-sm;
-    background: rgba(0, 0, 0, 0.2);
+    right: 38px;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     color: $color-text-secondary;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
+    transform: scale(0.9);
     transition: all $transition-fast;
 
     &:hover {
-      color: $color-today;
-      background: rgba(0, 0, 0, 0.4);
+      color: $color-accent-light;
+      background: rgba(0, 0, 0, 0.6);
     }
 
     &.active {
       opacity: 1;
-      color: $color-today;
-      background: rgba($color-today, 0.1);
+      transform: scale(1);
+      color: $color-accent-light;
+      background: rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.3);
     }
 
     svg {
@@ -367,20 +384,22 @@
     position: absolute;
     top: $spacing-sm;
     right: $spacing-sm;
-    width: 28px;
-    height: 28px;
-    border-radius: $radius-sm;
-    background: rgba(0, 0, 0, 0.2);
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     color: $color-text-secondary;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
+    transform: scale(0.9);
     transition: all $transition-fast;
 
     &:hover {
-      color: #ef4444;
-      background: rgba(0, 0, 0, 0.4);
+      color: #ff5a79;
+      background: rgba(0, 0, 0, 0.6);
     }
 
     svg {
@@ -391,9 +410,10 @@
 
   // Content
   &__title {
-    font-size: $font-size-md;
-    font-weight: 600;
-    color: $color-text-primary;
+    font-family: $font-display;
+    font-size: $font-size-base;
+    font-weight: 700;
+    color: #ffffff;
     margin-bottom: $spacing-sm;
     line-height: 1.3;
     padding-right: 48px; // Prevent overlap with action buttons
@@ -406,22 +426,26 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: $spacing-sm;
-    margin-bottom: $spacing-md;
+    gap: $spacing-xs;
+    margin-bottom: $spacing-sm;
   }
 
   // Previews
   &__preview-text {
-    font-size: $font-size-sm;
+    font-size: 0.8rem;
     color: $color-text-secondary;
     line-height: 1.4;
     word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   &__preview-todo {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
   }
 
   &__todo-summary {
@@ -431,8 +455,8 @@
   }
 
   &__todo-count {
-    font-size: $font-size-xs;
-    font-weight: 500;
+    font-size: 0.7rem;
+    font-weight: 600;
     color: $color-text-muted;
     white-space: nowrap;
   }
@@ -440,14 +464,14 @@
   &__todo-progress-bg {
     flex-grow: 1;
     height: 4px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: $radius-full;
     overflow: hidden;
   }
 
   &__todo-progress-bar {
     height: 100%;
-    background: $color-success;
+    background: linear-gradient(90deg, $color-accent 0%, $color-accent-light 100%);
     border-radius: $radius-full;
     transition: width 0.3s ease;
   }
@@ -455,14 +479,14 @@
   &__todo-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
   }
 
   &__todo-item {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: $font-size-sm;
+    font-size: 0.75rem;
     color: $color-text-secondary;
 
     &.done {
@@ -476,60 +500,60 @@
   }
 
   &__todo-icon {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     flex-shrink: 0;
     color: $color-text-muted;
   }
 
   &__todo-more {
-    font-size: $font-size-xs;
+    font-size: 0.7rem;
     color: $color-text-muted;
-    padding-left: 20px;
+    padding-left: 18px;
   }
 
   &__preview-numbered {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
   }
 
   &__numbered-item {
     display: flex;
     gap: 6px;
-    font-size: $font-size-sm;
+    font-size: 0.75rem;
     color: $color-text-secondary;
   }
 
   &__numbered-num {
     color: $color-accent-light;
-    font-weight: 600;
-    font-size: $font-size-sm;
+    font-weight: 700;
+    font-size: 0.75rem;
   }
 
   &__numbered-more {
-    font-size: $font-size-xs;
+    font-size: 0.7rem;
     color: $color-text-muted;
-    padding-left: 14px;
+    padding-left: 12px;
   }
 
   &__preview-table {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
   }
 
   &__table-summary {
-    font-size: $font-size-xs;
+    font-size: 0.7rem;
     color: $color-text-muted;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   &__table-grid {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: $radius-sm;
-    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: $radius-xs;
+    padding: 3px;
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -537,21 +561,21 @@
 
   &__table-row {
     display: flex;
-    gap: 4px;
+    gap: 3px;
   }
 
   &__table-cell {
     flex: 1;
-    font-size: $font-size-xs;
+    font-size: 0.65rem;
     color: $color-text-secondary;
-    padding: 2px 4px;
-    background: rgba(255, 255, 255, 0.02);
+    padding: 1px 3px;
+    background: rgba(255, 255, 255, 0.01);
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 
     &.more {
-      flex: 0 0 20px;
+      flex: 0 0 16px;
       color: $color-text-muted;
       background: transparent;
       text-align: center;
@@ -559,10 +583,10 @@
   }
 
   &__table-more {
-    font-size: 10px;
+    font-size: 9px;
     color: $color-text-muted;
     text-align: center;
-    margin-top: 2px;
+    margin-top: 1px;
   }
 
   // Label Badges
@@ -574,104 +598,98 @@
   }
 
   &__label-badge {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 6px;
-    background: rgba(255, 255, 255, 0.08);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    background: rgba(255, 255, 255, 0.05);
     color: $color-text-secondary;
     border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.03);
   }
 
-  // Color Variants
+  // Color Variants (Refined Glow Gradients)
   &--charcoal {
-    border-color: rgba(255, 255, 255, 0.08);
-    background: rgba($color-bg-card, 0.6);
-
-    &:hover {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
+    border-color: rgba(255, 255, 255, 0.05);
+    background: rgba(22, 24, 37, 0.45);
   }
 
   &--purple {
-    background: linear-gradient(135deg, rgba(30, 20, 60, 0.6), rgba(40, 20, 75, 0.6));
-    border-color: rgba($color-accent, 0.3);
+    background: linear-gradient(135deg, rgba(30, 20, 60, 0.4), rgba(15, 10, 35, 0.45));
+    border-color: rgba($color-accent, 0.2);
 
     &:hover {
-      border-color: rgba($color-accent, 0.7);
-      box-shadow: 0 8px 24px rgba($color-accent, 0.25);
+      border-color: rgba($color-accent, 0.4);
+      box-shadow: 0 4px 20px rgba($color-accent, 0.12);
     }
 
     .note-card__label-badge {
-      background: rgba($color-accent, 0.15);
+      background: rgba($color-accent, 0.08);
       color: $color-accent-light;
+      border-color: rgba($color-accent, 0.15);
     }
   }
 
   &--blue {
-    background: linear-gradient(135deg, rgba(15, 29, 58, 0.6), rgba(20, 39, 78, 0.6));
-    border-color: rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, rgba(15, 30, 60, 0.4), rgba(8, 15, 35, 0.45));
+    border-color: rgba(59, 130, 246, 0.2);
 
     &:hover {
-      border-color: rgba(59, 130, 246, 0.7);
-      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.12);
     }
 
     .note-card__label-badge {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(59, 130, 246, 0.08);
       color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.15);
     }
   }
 
   &--emerald {
-    background: linear-gradient(135deg, rgba(11, 36, 27, 0.6), rgba(15, 48, 36, 0.6));
-    border-color: rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, rgba(10, 40, 25, 0.4), rgba(5, 20, 15, 0.45));
+    border-color: rgba(16, 185, 129, 0.2);
 
     &:hover {
-      border-color: rgba(16, 185, 129, 0.7);
-      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.12);
     }
 
     .note-card__label-badge {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(16, 185, 129, 0.08);
       color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.15);
     }
   }
 
   &--amber {
-    background: linear-gradient(135deg, rgba(40, 28, 12, 0.6), rgba(52, 36, 15, 0.6));
-    border-color: rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, rgba(45, 30, 10, 0.4), rgba(20, 15, 5, 0.45));
+    border-color: rgba(245, 158, 11, 0.2);
 
     &:hover {
-      border-color: rgba(245, 158, 11, 0.7);
-      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+      border-color: rgba(245, 158, 11, 0.4);
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.12);
     }
 
     .note-card__label-badge {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(245, 158, 11, 0.08);
       color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.15);
     }
   }
 
   &--rose {
-    background: linear-gradient(135deg, rgba(41, 17, 32, 0.6), rgba(53, 22, 41, 0.6));
-    border-color: rgba(236, 72, 153, 0.3);
+    background: linear-gradient(135deg, rgba(45, 15, 30, 0.4), rgba(20, 5, 15, 0.45));
+    border-color: rgba(236, 72, 153, 0.2);
 
     &:hover {
-      border-color: rgba(236, 72, 153, 0.7);
-      box-shadow: 0 8px 24px rgba(236, 72, 153, 0.25);
+      border-color: rgba(236, 72, 153, 0.4);
+      box-shadow: 0 4px 20px rgba(236, 72, 153, 0.12);
     }
 
     .note-card__label-badge {
-      background: rgba(236, 72, 153, 0.15);
+      background: rgba(236, 72, 153, 0.08);
       color: #fbcfe8;
+      border-color: rgba(236, 72, 153, 0.15);
     }
   }
-}
-
-// Animation keyframes
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); filter: drop-shadow(0 0 4px rgba($color-today, 0.6)); }
-  100% { transform: scale(1); }
 }

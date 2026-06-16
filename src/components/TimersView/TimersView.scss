@@ -4,52 +4,54 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin-left: -$spacing-xl;
-  margin-right: -$spacing-xl;
-  width: calc(100% + #{$spacing-xl} * 2);
-  background: $color-bg-primary;
+  margin-left: -$spacing-lg;
+  margin-right: -$spacing-lg;
+  width: calc(100% + #{$spacing-lg} * 2);
+  background: transparent;
   color: $color-text-primary;
-  padding-bottom: 80px; // account for bottom nav
+  padding-bottom: 90px; // account for bottom nav
   position: relative;
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: $spacing-xl;
+    margin-bottom: $spacing-lg;
     padding: $spacing-sm 0;
-    margin-top: $spacing-sm;
+    margin-top: $spacing-xs;
   }
 
   &__title {
-    font-size: $font-size-lg;
+    font-family: $font-display;
+    font-size: $font-size-xl;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    color: $color-text-primary;
+    letter-spacing: -0.02em;
+    color: #ffffff;
   }
 
   &__content {
     flex: 1;
     overflow-y: auto;
-    padding: $spacing-xl 0;
-    padding-bottom: 100px; // extra spacing to scroll past FAB
+    padding: $spacing-md 0;
+    padding-bottom: 120px; // extra spacing to scroll past FAB
     display: flex;
     flex-direction: column;
-    gap: $spacing-2xl;
+    gap: $spacing-xl;
   }
 
   &__section {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
+    gap: $spacing-sm;
   }
 
   &__section-title {
-    font-size: $font-size-sm;
+    font-family: $font-display;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     color: $color-text-muted;
-    letter-spacing: 1px;
+    letter-spacing: 0.1em;
     padding-left: $spacing-xl;
   }
 
@@ -58,7 +60,7 @@
     background: transparent;
     border: none;
     text-align: center;
-    color: rgba($color-text-secondary, 0.85);
+    color: $color-text-secondary;
     font-size: $font-size-sm;
     font-style: italic;
   }
@@ -67,17 +69,16 @@
   &__active-list {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     padding: 0 $spacing-lg;
   }
 
   &__active-card {
-    background: $color-bg-card;
-    border-top: 1px solid $color-border;
-    border-bottom: 1px solid $color-border;
+    background: rgba(22, 24, 37, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: $radius-lg;
-    padding: $spacing-md $spacing-xl;
-    box-shadow: none;
+    padding: $spacing-md $spacing-lg;
+    box-shadow: $shadow-sm;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -86,22 +87,23 @@
     overflow: hidden;
     transition: all $transition-base;
 
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: $shadow-md, 0 0 20px rgba(99, 102, 241, 0.05);
+    }
+
     &--finished {
-      border-bottom: 1px solid rgba(#ef4444, 0.4);
-      box-shadow: inset 0 0 15px rgba(#ef4444, 0.1);
+      border-color: rgba(#ff5a79, 0.4);
+      box-shadow: inset 0 0 20px rgba(#ff5a79, 0.08), 0 0 25px rgba(#ff5a79, 0.15);
       animation: pulse-red-inset 2s infinite ease-in-out;
 
-      &::before {
-        background: #ef4444;
-      }
-
       .timers-view__btn-control--cancel {
-        color: #ef4444;
-        border-color: rgba(#ef4444, 0.3);
-        background: rgba(#ef4444, 0.1);
+        color: #ff5a79;
+        border-color: rgba(#ff5a79, 0.3);
+        background: rgba(#ff5a79, 0.1);
 
         &:active {
-          background: rgba(#ef4444, 0.2);
+          background: rgba(#ff5a79, 0.2);
         }
       }
     }
@@ -113,11 +115,11 @@
   }
 
   &__active-digits {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: $font-display;
     font-size: $font-size-xl;
-    font-weight: 800;
-    color: $color-text-primary;
-    letter-spacing: 1px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.01em;
   }
 
   /* Progress Bar */
@@ -126,8 +128,8 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 3px;
-    background: $color-bg-secondary;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.03);
     overflow: hidden;
   }
 
@@ -140,16 +142,17 @@
   &__active-actions {
     display: flex;
     align-items: center;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     z-index: 1;
   }
 
   &__finished-text {
-    color: #ef4444;
-    font-weight: 800;
-    font-size: $font-size-sm;
+    color: #ff5a79;
+    font-family: $font-display;
+    font-weight: 700;
+    font-size: $font-size-xs;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.05em;
     animation: flash 1s infinite alternate;
   }
 
@@ -167,49 +170,48 @@
     }
 
     &--icon {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: $radius-full;
-      box-shadow: none;
     }
 
     &--pause {
-      background: rgba($color-accent, 0.15);
+      background: rgba($color-accent, 0.12);
       color: $color-accent-light;
-      border: 1px solid rgba($color-accent, 0.3);
+      border: 1px solid rgba($color-accent, 0.2);
 
       &:active {
-        background: rgba($color-accent, 0.25);
+        background: rgba($color-accent, 0.22);
       }
     }
 
     &--resume {
-      background: rgba(#10b981, 0.15);
+      background: rgba(#10b981, 0.12);
       color: #10b981;
-      border: 1px solid rgba(#10b981, 0.3);
+      border: 1px solid rgba(#10b981, 0.2);
 
       &:active {
-        background: rgba(#10b981, 0.25);
+        background: rgba(#10b981, 0.22);
       }
     }
 
     &--cancel {
-      background: rgba($color-surface, 0.5);
+      background: rgba(255, 255, 255, 0.03);
       color: $color-text-secondary;
-      border: 1px solid $color-border;
+      border: 1px solid rgba(255, 255, 255, 0.08);
 
       &:active {
-        background: $color-surface-hover;
+        background: rgba(255, 255, 255, 0.08);
       }
     }
 
     &--stop {
-      background: rgba(#ef4444, 0.15);
-      color: #ef4444;
-      border: 1px solid rgba(#ef4444, 0.3);
+      background: rgba(#ff5a79, 0.12);
+      color: #ff5a79;
+      border: 1px solid rgba(#ff5a79, 0.2);
 
       &:active {
-        background: rgba(#ef4444, 0.25);
+        background: rgba(#ff5a79, 0.22);
       }
     }
   }
@@ -218,23 +220,29 @@
   &__preset-list {
     display: flex;
     flex-direction: column;
-    gap: $spacing-md;
-    padding: 0 $spacing-xl;
+    gap: $spacing-sm;
+    padding: 0 $spacing-lg;
   }
 
   &__preset-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $spacing-md $spacing-xl;
-    background: $color-bg-card;
-    border-top: 1px solid $color-border;
-    border-bottom: 1px solid $color-border;
+    padding: $spacing-md $spacing-lg;
+    background: rgba(22, 24, 37, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: $radius-lg;
     transition: all $transition-base;
 
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.09);
+      background: rgba(22, 24, 37, 0.6);
+      transform: translateY(-1px);
+      box-shadow: $shadow-sm;
+    }
+
     &:active {
-      background: rgba($color-surface-hover, 0.5);
+      transform: translateY(1px);
     }
   }
 
@@ -247,9 +255,9 @@
   &__preset-duration-large {
     font-size: $font-size-md;
     font-weight: 700;
-    color: $color-text-primary;
-    font-family: 'Courier New', Courier, monospace;
-    letter-spacing: 0.5px;
+    color: #ffffff;
+    font-family: $font-display;
+    letter-spacing: -0.01em;
   }
 
   &__preset-actions {
@@ -262,11 +270,11 @@
     background: linear-gradient(135deg, $color-accent 0%, $color-accent-light 100%);
     color: #fff;
     border: none;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: $radius-full;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba($color-accent, 0.2);
+    box-shadow: 0 4px 12px rgba($color-accent, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -276,6 +284,11 @@
       width: 18px;
       height: 18px;
       margin-left: 2px; // center the play triangle visually
+    }
+
+    &:hover {
+      box-shadow: 0 6px 18px rgba($color-accent, 0.4);
+      transform: scale(1.05);
     }
 
     &:active {
@@ -300,31 +313,23 @@
       height: 18px;
     }
 
-    &:active {
-      color: #ff4d4d;
-      background: rgba(#ff4d4d, 0.15);
+    &:hover {
+      color: #ff5a79;
+      background: rgba(#ff5a79, 0.08);
     }
   }
 }
 
 @keyframes pulse-red-inset {
-
-  0%,
-  100% {
-    box-shadow: inset 0 0 15px rgba(#ef4444, 0.1);
+  0%, 100% {
+    box-shadow: inset 0 0 15px rgba(#ff5a79, 0.1), 0 0 25px rgba(#ff5a79, 0.08);
   }
-
   50% {
-    box-shadow: inset 0 0 25px rgba(#ef4444, 0.25);
+    box-shadow: inset 0 0 25px rgba(#ff5a79, 0.25), 0 0 35px rgba(#ff5a79, 0.2);
   }
 }
 
 @keyframes flash {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0.3;
-  }
+  from { opacity: 1; }
+  to { opacity: 0.3; }
 }
