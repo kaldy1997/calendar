@@ -14,9 +14,9 @@ describe('NotesView', () => {
 
     render(<NotesView onAddNote={mockOnAdd} onEditNote={mockOnEdit} />);
 
-    expect(screen.getByText('Aún no tienes notas')).toBeInTheDocument();
+    expect(screen.getByText('No tienes notas guardadas')).toBeInTheDocument();
     
-    const createBtn = screen.getByRole('button', { name: 'Crear Nota' });
+    const createBtn = screen.getByRole('button', { name: 'Crear nueva nota' });
     fireEvent.click(createBtn);
     expect(mockOnAdd).toHaveBeenCalled();
   });

@@ -246,20 +246,9 @@ export function NotesView({ onAddNote, onEditNote }: NotesViewProps) {
       {/* Notes Container */}
       <div className={`notes-view__content ${layout}`}>
         {notes.length === 0 ? (
-          <div className="notes-view__empty">
-            <div className="notes-view__empty-icon">📝</div>
-            <h2 className="notes-view__empty-title">Aún no tienes notas</h2>
-            <p className="notes-view__empty-desc">Crea tu primera nota pulsando el botón flotante inferior.</p>
-            <button className="notes-view__empty-btn" onClick={onAddNote}>
-              Crear Nota
-            </button>
-          </div>
+          <div className="notes-view__empty">No tienes notas guardadas</div>
         ) : filteredNotes.length === 0 ? (
-          <div className="notes-view__empty">
-            <div className="notes-view__empty-icon">🔍</div>
-            <h2 className="notes-view__empty-title">No se encontraron notas</h2>
-            <p className="notes-view__empty-desc">Intenta ajustar tu búsqueda o el filtro de etiquetas.</p>
-          </div>
+          <div className="notes-view__empty">No se encontraron notas</div>
         ) : (
           <>
             {/* Pinned notes section */}
