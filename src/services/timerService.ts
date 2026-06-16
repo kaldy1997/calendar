@@ -238,7 +238,9 @@ class TimerService {
             body: '¡El tiempo se ha agotado!',
             sound: 'alarm.mp3',
             channelId: LOUD_ALARM_CHANNEL_ID,
-            allowWhileIdle: true,
+            schedule: {
+              allowWhileIdle: true
+            },
             extra: { timerId: timer.id }
           }
         ]
@@ -276,7 +278,9 @@ class TimerService {
             autoCancel: false,
             channelId: TIMERS_CHANNEL_ID,
             actionTypeId: 'TIMER_ACTIONS',
-            allowWhileIdle: true
+            schedule: {
+              allowWhileIdle: true
+            }
           }
         ]
       });

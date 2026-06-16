@@ -124,8 +124,6 @@ describe('TimerService', () => {
       duration: 5
     });
 
-    const timerId = timerService.getActiveTimers()[0].id;
-
     // Advance time by 5 seconds
     vi.setSystemTime(now + 5000);
     // Directly invoke private tick method to simulate interval tick
