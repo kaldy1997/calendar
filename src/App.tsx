@@ -19,6 +19,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 import type { CalendarEvent, ViewMode, AppView, CustomAlarm, Note } from './types/types';
 import './App.scss';
 
+import { timerService } from './services/timerService';
 import { getEventsForDate } from './utils/eventUtils';
 
 function App() {
@@ -49,6 +50,8 @@ function App() {
       }
       // Permissions
       await alarmService.requestPermissions();
+      // Initialize timers
+      await timerService.init();
     };
     initApp();
   }, []);

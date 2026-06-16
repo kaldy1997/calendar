@@ -112,6 +112,7 @@ src/
 1. **Conventional Commits**: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `style:`, `chore:`.
 2. **Idioma de commits**: Inglés.
 3. **Una feature por commit**. No mezclar múltiples cambios no relacionados.
+4. **Consentimiento de Commits**: No realizar commits en Git de forma autónoma sin que el usuario lo ordene o autorice explícitamente.
 
 ---
 

@@ -8,8 +8,6 @@ import './NotesView.scss';
 import searchIcon from '../../assets/icons/search.svg?raw';
 import pinIcon from '../../assets/icons/pin.svg?raw';
 import pinFilledIcon from '../../assets/icons/pin-filled.svg?raw';
-import gridIcon from '../../assets/icons/grid.svg?raw';
-import listIcon from '../../assets/icons/list.svg?raw';
 import trashIcon from '../../assets/icons/trash.svg?raw';
 import plusIcon from '../../assets/icons/plus.svg?raw';
 import checkIcon from '../../assets/icons/check.svg?raw';
@@ -20,8 +18,6 @@ const icons = {
   search: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: searchIcon }} />,
   pin: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: pinIcon }} />,
   pinFilled: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: pinFilledIcon }} />,
-  grid: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: gridIcon }} />,
-  list: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: listIcon }} />,
   trash: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: trashIcon }} />,
   plus: <span className="icon-svg" dangerouslySetInnerHTML={{ __html: plusIcon }} />,
   checkboxChecked: <span className="icon-svg note-card__todo-icon checked" dangerouslySetInnerHTML={{ __html: checkIcon }} />,
@@ -36,7 +32,7 @@ interface NotesViewProps {
 export function NotesView({ onAddNote, onEditNote }: NotesViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLabel, setSelectedLabel] = useState<string>('Todas');
-  const [layout, setLayout] = useState<'grid' | 'list'>('grid');
+  const layout = 'grid';
 
   // Load notes from DB
   const notes = useLiveQuery(() => db.notes.toArray()) || [];
@@ -193,16 +189,6 @@ export function NotesView({ onAddNote, onEditNote }: NotesViewProps) {
       {/* Header bar */}
       <header className="notes-view__header">
         <h1 className="notes-view__title">Mis Notas</h1>
-        <div className="notes-view__actions">
-          <button
-            className="notes-view__layout-btn"
-            onClick={() => setLayout(l => l === 'grid' ? 'list' : 'grid')}
-            title={layout === 'grid' ? 'Ver en lista' : 'Ver en cuadrícula'}
-            aria-label="Alternar diseño"
-          >
-            {layout === 'grid' ? icons.list : icons.grid}
-          </button>
-        </div>
       </header>
 
       {/* Search and Filters */}

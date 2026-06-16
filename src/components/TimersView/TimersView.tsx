@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../../services/db';
 import { Fab } from '../Fab';
+import { timerService } from '../../services/timerService';
 import type { ConfiguredTimer, ActiveTimer } from '../../types/types';
 import playIcon from '../../assets/icons/play.svg?raw';
 import pauseIcon from '../../assets/icons/pause.svg?raw';
@@ -23,39 +24,19 @@ interface TimersViewProps {
 }
 
 export default function TimersView({ onAddTimer }: TimersViewProps) {
-  // Local state for active running timers
-  const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([]);
+  // Sync state with global timerService
+  const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>(() => timerService.getActiveTimers());
 
   // Configured Timers query
   const presets = useLiveQuery(() => db.customTimers.toArray()) || [];
 
-  // Update timer seconds every 200ms
+  // Subscribe to changes in timerService
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTimers(prev => {
-        let changed = false;
-        const updated = prev.map(t => {
-          if (t.isRunning && t.startTime) {
-            const elapsed = Math.floor((Date.now() - t.startTime) / 1000);
-            const currentElapsed = t.elapsedBefore + elapsed;
-            const remaining = Math.max(0, t.duration - currentElapsed);
-
-            if (remaining !== t.remainingSeconds) {
-              changed = true;
-              return {
-                ...t,
-                remainingSeconds: remaining,
-                isRunning: remaining > 0 ? t.isRunning : false
-              };
-            }
-          }
-          return t;
-        });
-        return changed ? updated : prev;
-      });
-    }, 200);
-
-    return () => clearInterval(interval);
+    const handleUpdate = (updatedTimers: ActiveTimer[]) => {
+      setActiveTimers(updatedTimers);
+    };
+    timerService.subscribe(handleUpdate);
+    return () => timerService.unsubscribe(handleUpdate);
   }, []);
 
   const handleDeletePreset = async (id: string) => {
@@ -64,55 +45,22 @@ export default function TimersView({ onAddTimer }: TimersViewProps) {
 
   // Launch a new active timer from a preset
   const handleStartPreset = (preset: ConfiguredTimer) => {
-    const newActive: ActiveTimer = {
-      id: Math.random().toString(36).substring(2, 11),
-      configuredTimerId: preset.id,
-      duration: preset.duration,
-      remainingSeconds: preset.duration,
-      isRunning: true,
-      startTime: Date.now(),
-      elapsedBefore: 0
-    };
-    setActiveTimers(prev => [newActive, ...prev]);
+    timerService.startTimer(preset);
   };
 
   // Pause a running active timer
   const handlePauseTimer = (id: string) => {
-    setActiveTimers(prev =>
-      prev.map(t => {
-        if (t.id === id && t.isRunning && t.startTime) {
-          const elapsed = Math.floor((Date.now() - t.startTime) / 1000);
-          return {
-            ...t,
-            isRunning: false,
-            elapsedBefore: t.elapsedBefore + elapsed,
-            startTime: undefined
-          };
-        }
-        return t;
-      })
-    );
+    timerService.pauseTimer(id);
   };
 
   // Resume a paused active timer
   const handleResumeTimer = (id: string) => {
-    setActiveTimers(prev =>
-      prev.map(t => {
-        if (t.id === id && !t.isRunning) {
-          return {
-            ...t,
-            isRunning: true,
-            startTime: Date.now()
-          };
-        }
-        return t;
-      })
-    );
+    timerService.resumeTimer(id);
   };
 
   // Cancel/Remove active timer
   const handleCancelTimer = (id: string) => {
-    setActiveTimers(prev => prev.filter(t => t.id !== id));
+    timerService.cancelTimer(id);
   };
 
   const formatDuration = (totalSecs: number) => {
